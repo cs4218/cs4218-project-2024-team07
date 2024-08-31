@@ -3,3 +3,8 @@ node_modules
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+**/.env
+/package-lock.json
+
+# ignore sonar scanner
+**/sonar-project.properties
