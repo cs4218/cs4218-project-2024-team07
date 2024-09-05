@@ -55,6 +55,9 @@
     },
     "transformIgnorePatterns": [
       "/node_modules/(?!(styleMock\\.js)$)"
+    ],
+    "setupFiles": [
+      "./setup.jest.js"
     ]
   }
 }
