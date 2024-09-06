@@ -1,7 +1,7 @@
 const config = {
     "testEnvironment": "jest-environment-node",
     "transform": {
-      "^.+\\.jsx?$": "babel-jest"
+    //   "^.+\\.jsx?$": "babel-jest"
     },
     "moduleNameMapper": {
       "\\.(css|scss)$": "identity-obj-proxy"
