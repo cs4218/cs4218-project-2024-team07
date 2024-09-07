@@ -1,6 +1,7 @@
 import { render, screen, act } from '@testing-library/react';
 import Spinner from '../components/Spinner';
 import { BrowserRouter as Router } from 'react-router-dom';
+import React from 'react';
 
 /**
  * 1) Checking spinner every second for 3 seconds
