@@ -9,32 +9,59 @@ import {
   getAllOrdersController,
   orderStatusController,
 } from "./authController.js";
-
 import userModel from '../models/userModel.js';
-import orderModel from '../models/orderModel.js';
 
-jest.mock("../models/userModel");
-jest.mock("../models/orderModel");
+jest.mock('../helpers/authHelper');  
+jest.mock('../models/userModel', () => ({
+    findOne: jest.fn(),  
+    prototype: { save: jest.fn() },  
+  }));
 
-jest.unstable_mockModule('../helpers/authHelper.js', () => ({
-  hashPassword: jest.fn(),
-  comparePassword: jest.fn(),
-}));
 
-describe("Register Controller", () => {
-  it("placeholder", () => expect(true).toBe(true));
+describe('registerController', () => {
+  let req, res;
+
+  beforeEach(() => {
+    req = {
+      body: {
+        name: 'Test User',
+        email: 'test@example.com',
+        password: 'Password123',
+        phone: '1234567890',
+        address: '123 Test Street',
+        answer: 'Test Answer',
+      },
+    };
+
+    res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    };
+  });
+
+  it('should return error if name is missing', async () => {
+    req.body.name = '';  
+    await registerController(req, res);
+
+    expect(res.send).toHaveBeenCalledWith({ error: 'Name is Required' });
+  });
+
+  it('should return error if email is missing', async () => {
+    req.body.email = '';  
+    await registerController(req, res);
+
+    expect(res.send).toHaveBeenCalledWith({ message: 'Email is Required' });
+  });
+
+  it('should return error if user already exists', async () => {
+    
+  });
+
+  it('should register a new user successfully', async () => {
+
+  });
+  
+  it('should return an error if something goes wrong', async () => {
+
+  });
 });
-
-describe("Login Controller", () => {});
-
-describe("Test Controller", () => {});
-
-describe("Forgot Password Controller", () => {});
-
-describe("Update Profile Controller", () => {});
-
-describe("Get Orders Controller", () => {});
-
-describe("Get All Orders Controller", () => {});
-
-describe("Order Status Controller", () => {});
