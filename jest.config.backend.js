@@ -9,7 +9,7 @@ const config = {
     "transformIgnorePatterns": [
       "/node_modules/(?!(styleMock\\.js)$)"
     ],
-    "setupFilesAfterEnv": [
+    "setupFiles": [
       "./setup.jest.js"
     ],
     "testPathIgnorePatterns": ["./client"],

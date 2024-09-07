@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import Spinner from '../components/Spinner';
-import '@testing-library/jest-dom'
 import { BrowserRouter as Router } from 'react-router-dom';
 
 /**
