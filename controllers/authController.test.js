@@ -1,22 +1,10 @@
 import { jest } from '@jest/globals';
-import {
-  registerController,
-  loginController,
-  testController,
-  forgotPasswordController,
-  updateProfileController,
-  getOrdersController,
-  getAllOrdersController,
-  orderStatusController,
-} from "./authController.js";
 import userModel from '../models/userModel.js';
 import { hashPassword } from '../helpers/authHelper';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import request from 'supertest';
 import app from '../server.js'
-
-
 
 
 dotenv.config();
@@ -40,7 +28,7 @@ describe('/register', () => {
     req = {
       body: {
         name: 'Test User',
-        email: 'test-hs@example.com',
+        email: 'test-authController-hs@example.com',
         password: 'Password123',
         phone: '1234567890',
         address: '123 Test Street',
@@ -55,7 +43,7 @@ describe('/register', () => {
 
     // Clean up the database before each test
     // Will be using this email for tests
-    await userModel.deleteOne({ email: 'test-hs@example.com' });
+    await userModel.deleteOne({ email: 'test-authController-hs@example.com' });
   });
 
   it('should register a new user', async () => {
@@ -159,14 +147,14 @@ describe('/login', () => {
   beforeEach(async () => {
     req = {
       body: {
-        email: 'test-hs@example.com',
+        email: 'test-authController-hs@example.com',
         password: 'Password1234',
       }
     };
 
 
     // Clean up the database before each test
-    await userModel.deleteOne({ email: 'test-hs@example.com' });
+    await userModel.deleteOne({ email: 'test-authController-hs@example.com' });
   });
 
   it('should return 404 if email or password is missing', async () => {
@@ -194,7 +182,7 @@ describe('/login', () => {
       .post('/api/v1/auth/register')
       .send({
           name: 'Test User',
-          email: 'test-hs@example.com',
+          email: 'test-authController-hs@example.com',
           password: 'Password123',
           phone: '1234567890',
           address: '123 Test Street',
