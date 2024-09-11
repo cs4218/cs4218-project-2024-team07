@@ -18,3 +18,11 @@ In the repository of your team, tag the submitted commit with a tag name “ms1�
 1. Create a tag, e.g., git tag -a ms1 -m “Milestone 1”
 2. Push the created tag into the repository, e.g., git push origin ms1
 3. More details are in: http://git-scm.com/book/en/v2/Git-Basics-Tagging
+
+
+# Quick Guide on jmeter
+1. Download jmeter from the website. Follow instructions there to save file into desired location
+2. Create a test plan. If you don't want to create, a test plan has been created and saved into the jmeter folder
+3. Run the initial_load_test.sh file. It includes the shell command needed to run the initial_load_test.JMX test-plan under the test plan folder. Note you need jmeter and access to mongo db to run this. 
+4. What is initial_load_test.JMX? It is a test configuration file which uses HTTP Get Requests to access the frontend sites and the backend apis. If initial_load_test.sh doesn't work try initial_load_test_debug.sh
+5. After running the test results should appear in the outputs folder.
