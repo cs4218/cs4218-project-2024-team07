@@ -4,7 +4,7 @@ import app from '../server.js'
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import request from 'supertest';
-import { requireSignIn } from './authMiddleware.js';
+import { requireSignIn, isAdmin } from './authMiddleware.js';
 
 
 dotenv.config();
@@ -80,10 +80,38 @@ describe('Authentication middleware', () => {
   
 
       expect(next).toHaveBeenCalled();
-      expect(middlewareReq.user).toBeDefined(); // Check if req.user has been set with decoded user info
-      expect(middlewareReq.user).toHaveProperty('_id');  // Assuming your token includes 'id'
+      expect(middlewareReq.user).toBeDefined(); 
+      expect(middlewareReq.user).toHaveProperty('_id');  
   });
   
+  it('should successfully verify whether a person is admin', async () => {
+    let middlewareReq = {
+        user: {}  
+    };
+
+    // set the user to have admin rights
+    await userModel.updateOne(
+        { email: 'test-authMiddleware-hs@example.com' },  
+        { $set: { role: 1 } }                             
+    );
+
+    const loginRes = await request(app)
+        .post('/api/v1/auth/login')
+        .send(req.body);  
+
+    const test_id = loginRes.body.user._id;
+    middlewareReq.user._id = test_id;
+
+    
+    const next = jest.fn();  
+
+
+    await isAdmin(middlewareReq, {}, next);
+    expect(next).toHaveBeenCalled();
+    expect(middlewareReq.user).toBeDefined(); 
+    expect(middlewareReq.user).toHaveProperty('_id'); 
+  });
+
 
 });
 
