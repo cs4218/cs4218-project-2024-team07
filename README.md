@@ -12,3 +12,11 @@ If your group number is a single digit, i.e 2024-Team1 is fine as well.)
 The other members in the team will be able to see an existing team with your team number in the “Join an existing team” section. Click Join.
 
 ## Step 3. All of you should be able to see the acceptance page. Click on the assignment link to see the project on GitHub.
+
+
+# Quick Guide on jmeter
+1. Download jmeter from the website. Follow instructions there to save file into desired location
+2. Create a test plan. If you don't want to create, a test plan has been created and saved into the jmeter folder
+3. Run the initial_load_test.sh file. It includes the shell command needed to run the initial_load_test.JMX test-plan under the test plan folder. Note you need jmeter and access to mongo db to run this. 
+4. What is initial_load_test.JMX? It is a test configuration file which uses HTTP Get Requests to access the frontend sites and the backend apis. If initial_load_test.sh doesn't work try initial_load_test_debug.sh
+5. After running the test results should appear in the outputs folder.
