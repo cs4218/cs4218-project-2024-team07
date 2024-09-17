@@ -1,13 +1,10 @@
-// connectDB.test.js
 import mongoose from 'mongoose';
 import connectDB from './db';
-
-jest.mock('mongoose', () => ({
-  connect: jest.fn(),
-}));
+import { jest } from '@jest/globals';
 
 describe('connectDB', () => {
   const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+  const mongooseConnectSpy = jest.spyOn(mongoose, 'connect');
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -20,13 +17,13 @@ describe('connectDB', () => {
         host: 'localhost',
       },
     };
-    mongoose.connect.mockResolvedValue(mockConnection);
+    mongooseConnectSpy.mockResolvedValue(mockConnection);
 
     // Act
     await connectDB();
 
     // Assert
-    expect(mongoose.connect).toHaveBeenCalledWith(process.env.MONGO_URL);
+    expect(mongooseConnectSpy).toHaveBeenCalledWith(process.env.MONGO_URL);
     expect(consoleLogSpy).toHaveBeenCalledWith(
       `Connected To Mongodb Database ${mockConnection.connection.host}`.bgMagenta.white
     );
@@ -35,13 +32,13 @@ describe('connectDB', () => {
   it('should log error message when connection fails', async () => {
     // Arrange
     const mockError = new Error('Connection failed');
-    mongoose.connect.mockRejectedValue(mockError);
+    mongooseConnectSpy.mockRejectedValue(mockError);
 
     // Act
     await connectDB();
 
     // Assert
-    expect(mongoose.connect).toHaveBeenCalledWith(process.env.MONGO_URL);
+    expect(mongooseConnectSpy).toHaveBeenCalledWith(process.env.MONGO_URL);
     expect(consoleLogSpy).toHaveBeenCalledWith(
       `Error in Mongodb ${mockError}`.bgRed.white
     );
