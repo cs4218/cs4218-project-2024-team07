@@ -281,7 +281,7 @@ export const searchProductController = async (req, res) => {
 };
 
 // similar products
-export const realtedProductController = async (req, res) => {
+export const realtedProductController = async (req, res) => {  // spelling bug
   try {
     const { pid, cid } = req.params;
     const products = await productModel
