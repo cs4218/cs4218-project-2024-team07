@@ -1,5 +1,3 @@
-// AdminMenu.test.js
-
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
@@ -29,8 +27,6 @@ describe('AdminMenu Component', () => {
       { text: 'Create Product', path: '/dashboard/admin/create-product' },
       { text: 'Products', path: '/dashboard/admin/products' },
       { text: 'Orders', path: '/dashboard/admin/orders' },
-      // Uncomment if you include the 'Users' link
-      // { text: 'Users', path: '/dashboard/admin/users' },
     ];
 
     links.forEach(({ text, path }) => {
