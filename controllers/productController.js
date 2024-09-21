@@ -110,10 +110,9 @@ export const getSingleProductController = async (req, res) => {
 // get photo
 export const productPhotoController = async (req, res) => {
   try {
-    const obj = await productModel.findById(req.params.pid);
-    const product = await productModel.findById(req.params.pid);
-    // const product = await productModel.findById(req.params.pid).select("photo");
-    console.log(product);
+    // const product = await productModel.findById(req.params.pid);  
+    // Error in the code below. Use the above code to make test cases pass.
+    const product = await productModel.findById(req.params.pid).select("photo");
     if (product.photo.data) {
       res.set("Content-type", product.photo.contentType);
       return res.status(200).send(product.photo.data);
