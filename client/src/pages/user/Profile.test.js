@@ -4,6 +4,7 @@ import Profile from "./Profile";
 import { useAuth } from "../../context/auth";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { log, error } from 'console'
 
 jest.mock("axios");
 jest.mock("react-hot-toast");
@@ -11,11 +12,11 @@ jest.mock("../../context/auth");
 jest.mock("./../../components/Layout", () => ({ children }) => <div>{children}</div>)
 jest.mock("../../components/UserMenu")
 
-describe("Profile component test", () => {
+describe("Initialization of Profile", () => {
   const setAuthMock = jest.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
 
     // Default mock authenticated user
     useAuth.mockReturnValue([
@@ -31,7 +32,7 @@ describe("Profile component test", () => {
     ]);
   });
 
-  it('Renders with initial user data', async () => {
+  it('Initialize with authenticated user profile data', async () => {
     render(
       <Profile />
     );
@@ -41,8 +42,29 @@ describe("Profile component test", () => {
     expect(await screen.findByDisplayValue('1234567890')).toBeInTheDocument();
     expect(await screen.findByDisplayValue('123 Main St')).toBeInTheDocument();
   });
+});
 
-  it('Updates fields when auth.user changes', async () => {
+describe("Successful updating of Profile", () => {
+  const setAuthMock = jest.fn();
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+
+    // Default mock authenticated user
+    useAuth.mockReturnValue([
+      {
+        user: {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          phone: '1234567890',
+          address: '123 Main St',
+        },
+      },
+      setAuthMock,
+    ]);
+  });
+
+  it('Update when authenticated user details changes', async () => {
     const { rerender } = render(
       <Profile />
     );
@@ -67,23 +89,6 @@ describe("Profile component test", () => {
     expect(await screen.findByDisplayValue('jane.doe@example.com')).toBeInTheDocument();
     expect(await screen.findByDisplayValue('0987654321')).toBeInTheDocument();
     expect(await screen.findByDisplayValue('456 Elm St')).toBeInTheDocument();
-  });
-
-  it("Show an error toast when data.error is true", async () => {
-    axios.put.mockResolvedValue({
-      data: {
-        error: "Some error",
-      },
-    });
-
-    render(
-      <Profile />
-    );
-
-    fireEvent.click(screen.getByText("UPDATE"));
-
-    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Some error"));
   });
 
   it("Successful update of profile", async () => {
@@ -146,8 +151,67 @@ describe("Profile component test", () => {
     ));
     expect(toast.success).toHaveBeenCalledWith("Profile Updated Successfully");
   });
+});
 
-  it("Handles case where localStorage getItem is null", async () => {
+describe("Server update failure of Profile", () => {
+  const setAuthMock = jest.fn();
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+
+    // Default mock authenticated user
+    useAuth.mockReturnValue([
+      {
+        user: {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          phone: '1234567890',
+          address: '123 Main St',
+        },
+      },
+      setAuthMock,
+    ]);
+  });
+
+  it("Create toast error with data error from server", async () => {
+    axios.put.mockResolvedValue({
+      data: {
+        error: "Some error",
+      },
+    });
+
+    render(
+      <Profile />
+    );
+
+    fireEvent.click(screen.getByText("UPDATE"));
+
+    await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Some error"));
+  });
+});
+
+describe("Exception handling in Profile", () => {
+  const setAuthMock = jest.fn();
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+
+    // Default mock authenticated user
+    useAuth.mockReturnValue([
+      {
+        user: {
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          phone: '1234567890',
+          address: '123 Main St',
+        },
+      },
+      setAuthMock,
+    ]);
+  });
+
+  it("Exception when localStorage getItem is null", async () => {
     axios.put.mockResolvedValue({
       data: {
         updatedUser: {
@@ -177,7 +241,7 @@ describe("Profile component test", () => {
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Something went wrong"));
   });
 
-  it("Handles case where localStorage has malformed JSON", async () => {
+  it("Exception when localStorage has malformed JSON", async () => {
     const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
     axios.put.mockResolvedValue({
       data: {

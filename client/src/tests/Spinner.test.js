@@ -3,12 +3,6 @@ import { render, screen, act } from '@testing-library/react';
 import Spinner from '../components/Spinner';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-/**
- * 1) Checking spinner every second for 3 seconds
- * 2) Check login call
- * 3) Check custom call
- */
-
 const mockNavigate = jest.fn();
 const mockLocation = { pathname: '/test', search: '', hash: '', state: null };
 
@@ -21,11 +15,6 @@ jest.mock('react-router-dom', () => ({
 describe('Spinner component', () => {
   beforeEach(() => {
     jest.useFakeTimers();
-    render(
-      <Router>
-        <Spinner/>
-      </Router>
-    );
   })
     
   afterEach(() => {
@@ -33,13 +22,23 @@ describe('Spinner component', () => {
     jest.clearAllTimers(); 
   });
 
-  it('renders spinner with countdown', () => {
+  it('Initialization of spinner with countdown', () => {
+    render(
+      <Router>
+        <Spinner/>
+      </Router>
+    );
     expect(screen.getByText(/redirecting to you in 3 second/i)).toBeInTheDocument();
     expect(screen.getByRole('status')).toBeInTheDocument();
 
   });
 
-  it('should decrement the countdown every second', () => {
+  it('Decrement the spinner countdown every second', () => {
+    render(
+      <Router>
+        <Spinner/>
+      </Router>
+    );
     act(() => {
       jest.advanceTimersByTime(1000);
     });
@@ -51,14 +50,19 @@ describe('Spinner component', () => {
     expect(screen.getByText(/redirecting to you in 1 second/i)).toBeInTheDocument();
   });
 
-  it('should navigate to login path after countdown', () => {
+  it('Navigate to login path after countdown', () => {
+    render(
+      <Router>
+        <Spinner/>
+      </Router>
+    );
     act(() => {
       jest.advanceTimersByTime(3000);
     });
     expect(mockNavigate).toHaveBeenCalledWith('/login', { state: '/test' });
   });
 
-  it('should navigate to a custom path after countdown', () => {
+  it('Navigate to a custom path after countdown', () => {
     render(
       <Router>
         <Spinner path="dashboard"/>
