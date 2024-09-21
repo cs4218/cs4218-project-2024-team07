@@ -55,6 +55,7 @@ beforeEach(() => {
 const createMockResponse = () => ({
   status: jest.fn().mockReturnThis(),
   send: jest.fn(),
+  set: jest.fn(),
 });
 
 test("Create Product - success", async () => {
@@ -363,65 +364,84 @@ test("Get Single Product - failure", async () => {
   );
 });
 
-test("Get product photo with an existing product ID", async () => {
-  // Mocking the findById method of productModel
-  const findByIdMock = jest.spyOn(productModel, "findById").mockResolvedValue({
-    _id: "1",
-    photo: { data: Buffer.from("mock photo data"), contentType: "image/png" },
-  });
+// test("Get product photo with an existing product ID", async () => {
+//   // Mocking the findById method of productModel
+//   const findByIdMock = jest.spyOn(productModel, "findById").mockResolvedValue({
+//     _id: "1",
+//     photo: { data: Buffer.from("mock photo data"), contentType: "image/png" },
+//   });
 
-  const req = { params: { pid: "1" } }; // Mock request with product ID
-  const res = {
-    set: jest.fn(), // Mocking the set method for setting headers
-    status: jest.fn().mockReturnThis(), // Mocking the status method
-    send: jest.fn(), // Mocking the send method
-  };
+//   const req = { params: { pid: "1" } }; // Mock request with product ID
+//   const res = {
+//     set: jest.fn(), // Mocking the set method for setting headers
+//     status: jest.fn().mockReturnThis(), // Mocking the status method
+//     send: jest.fn(), // Mocking the send method
+//   };
 
-  // Call the productPhotoController
-  await productPhotoController(req, res);
+//   // Call the productPhotoController
+//   await productPhotoController(req, res);
 
-  // Assertions
-  expect(findByIdMock).toHaveBeenCalledWith("1"); // Check if `findById` was called with the correct ID
-  // expect(res.set).toHaveBeenCalledWith("Content-type", "image/png"); // Ensure the content type was set correctly
-  expect(res.status).toHaveBeenCalledWith(200); // Expect a 200 status code
-  expect(res.send).toHaveBeenCalledWith(Buffer.from("mock photo data")); // Ensure the correct photo data was sent
-});
+//   // Assertions
+//   expect(findByIdMock).toHaveBeenCalledWith("1"); // Check if `findById` was called with the correct ID
+//   // expect(res.set).toHaveBeenCalledWith("Content-type", "image/png"); // Ensure the content type was set correctly
+//   expect(res.status).toHaveBeenCalledWith(200); // Expect a 200 status code
+//   expect(res.send).toHaveBeenCalledWith(Buffer.from("mock photo data")); // Ensure the correct photo data was sent
+// });
 
 
 test("Get Product Photo - success", async () => {
-  // Mock product data with a photo
-  // 1. Mock the photo data
-  // 2. Store this mocked photo data in the model/db
-  // 3. Call the controller to get the photo
-  // 4. Ensure the correct photo data is sent in the response
-  // 5. Ensure the correct content type is set in the response
-  // 6. Ensure the correct status code is set in the response
-  // 7. Ensure `findById` was called with the correct ID
+console.log("===============Get Product Photo - success=====================");
   const mockPhotoData = {
     _id: "1",
     photo: { data: Buffer.from("mock data"), contentType: "image/png" },
   };
 
   // Mock the `findById` method to return the mock photo data
-  const mockFindById = jest.spyOn(productModel, 'findOne').mockResolvedValue(mockPhotoData);
+  const mockFindById = jest.spyOn(productModel, 'findById').mockResolvedValue(mockPhotoData);
 
   const req = { params: { pid: "1" } }; // Mock request with product ID
   const res = createMockResponse();
 
   // Call the controller
   await productPhotoController(req, res);
-  const product = await productModel.findById(req.params.pid).photo;
-console.log('Fetched product:', product);
-  console.log(mockPhotoData);
+  const product = await productModel.findById(req.params.pid);
   // Assertions
   expect(mockFindById).toHaveBeenCalled(); // Check if `findById` was called with correct ID
-  // expect(productModel.findById).toHaveBeenCalledWith("1"); // Check if `findById` was called with correct ID
-  // expect(res.set).toHaveBeenCalledWith("Content-type", "image/png"); // Ensure content type was set correctly
+  expect(productModel.findById).toHaveBeenCalledWith("1"); // Check if `findById` was called with correct ID
+  expect(res.set).toHaveBeenCalledWith("Content-type", "image/png"); // Ensure content type was set correctly
   expect(res.status).toHaveBeenCalledWith(200); // Expect a 200 status code
-  expect(res.send).toHaveBeenCalledWith(Buffer.from("mock data")); // Ensure the correct photo data was sent
-  expect(res.send).toHaveBeenCalledWith("Get SIngle Category SUccessfully"); // Ensure the correct photo data was sent
+  expect(res.send).toHaveBeenCalledWith(product.photo.data); // Ensure the correct photo data was sent
 
 
+});
+
+
+test("Get Product Photo - failure", async () => {
+  console.log("===============Get Product Photo - failure=====================");
+  const mockPhotoData = {
+    _id: "1",
+    photo: { data: Buffer.from("mock data"), contentType: "image/png" },
+  };
+
+  // Mock the `findById` method to return the mock photo data
+  const mockFindById = jest.spyOn(productModel, 'findById').mockRejectedValue(new Error('Database query failed'));
+
+  const req = { params: { pid: "2" } }; // Mock request with product ID
+  const res = createMockResponse();
+
+  // Call the controller
+  await productPhotoController(req, res);
+  // Assertions
+  expect(res.status).toHaveBeenCalledWith(500); // Expect a 500 status code
+  expect(mockFindById).toHaveBeenCalled(); // Check if `findById` was called with correct ID
+  expect(productModel.findById).toHaveBeenCalledWith("2"); // Check if `findById` was called with correct ID
+  expect(res.send).toHaveBeenCalledWith(
+    expect.objectContaining({
+      success: false,
+      message: "Erorr while getting photo", // bug in spelling here
+      error: new Error("Database query failed")
+    })
+  );
 });
 
 // test("Get Product Photo - failure", async () => {
