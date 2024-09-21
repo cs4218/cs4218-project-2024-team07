@@ -8,5 +8,3 @@ node_modules
 
 # ignore sonar scanner
 **/sonar-project.properties
-
-/coverage/
