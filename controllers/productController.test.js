@@ -364,30 +364,6 @@ test("Get Single Product - failure", async () => {
   );
 });
 
-// test("Get product photo with an existing product ID", async () => {
-//   // Mocking the findById method of productModel
-//   const findByIdMock = jest.spyOn(productModel, "findById").mockResolvedValue({
-//     _id: "1",
-//     photo: { data: Buffer.from("mock photo data"), contentType: "image/png" },
-//   });
-
-//   const req = { params: { pid: "1" } }; // Mock request with product ID
-//   const res = {
-//     set: jest.fn(), // Mocking the set method for setting headers
-//     status: jest.fn().mockReturnThis(), // Mocking the status method
-//     send: jest.fn(), // Mocking the send method
-//   };
-
-//   // Call the productPhotoController
-//   await productPhotoController(req, res);
-
-//   // Assertions
-//   expect(findByIdMock).toHaveBeenCalledWith("1"); // Check if `findById` was called with the correct ID
-//   // expect(res.set).toHaveBeenCalledWith("Content-type", "image/png"); // Ensure the content type was set correctly
-//   expect(res.status).toHaveBeenCalledWith(200); // Expect a 200 status code
-//   expect(res.send).toHaveBeenCalledWith(Buffer.from("mock photo data")); // Ensure the correct photo data was sent
-// });
-
 
 test("Get Product Photo - success", async () => {
 console.log("===============Get Product Photo - success=====================");
@@ -444,71 +420,51 @@ test("Get Product Photo - failure", async () => {
   );
 });
 
-// test("Get Product Photo - failure", async () => {
-//   // Mock the `findById` method to throw an error
-//   const mockError = new Error("Database query failed");
-//   // productModel.findById = jest.fn().mockRejectedValue(mockError);
-
-//   const req = { params: { pid: "" } };
-//   const res = createMockResponse();
-
-//   // Call the controller
-//   await productPhotoController(req, res);
-
-//   // Assertions
-//   expect(res.status).toHaveBeenCalledWith(500); // Expect a 500 status code
-//   expect(res.send).toHaveBeenCalledWith(
-//     expect.objectContaining({
-//       success: false,
-//       message: "Erorr while getting photo",
-//       error: mockError,
-//     })
-//   );
-// });
 
 
-// test("Delete Product - success", async () => {
-//   // Mock the `findByIdAndDelete` method
-//   const mockDelete = jest.fn().mockResolvedValue({ _id: "1" });
+test("Delete Product - success", async () => {
+  // Mock the `findByIdAndDelete` method
+  const findByIdAndDeleteMock = jest.spyOn(productModel, 'findByIdAndDelete').mockResolvedValue({ _id: "1" });
 
-//   productModel.findByIdAndDelete = mockDelete;
+  productModel.findByIdAndDelete = findByIdAndDeleteMock;
 
-//   const req = { params: { pid: "1" } }; // Mock request with product ID
-//   const res = createMockResponse();
+  const req = { params: { pid: "1" } }; // Mock request with product ID
+  const res = createMockResponse();
 
-//   // Call the controller
-//   await deleteProductController(req, res);
+  // Call the controller
+  await deleteProductController(req, res);
 
-//   // Assertions
-//   expect(mockDelete).toHaveBeenCalledWith("1"); // Ensure the product is deleted using the correct ID
-//   expect(res.status).toHaveBeenCalledWith(200); // Expect a 200 status code
-//   expect(res.send).toHaveBeenCalledWith(
-//     expect.objectContaining({
-//       success: true,
-//       message: "Product Deleted successfully",
-//     })
-//   );
-// });
+  // Assertions
+  expect(findByIdAndDeleteMock).toHaveBeenCalledWith("1"); // Ensure the product is deleted using the correct ID
+  expect(res.status).toHaveBeenCalledWith(200); // Expect a 200 status code
+  expect(res.send).toHaveBeenCalledWith(
+    expect.objectContaining({
+      success: true,
+      message: "Product Deleted successfully",
+    })
+  );
+});
 
+// Expected to fail
+test("Delete Product - failure", async () => {
+  const findByIdAndDeleteMock = jest.spyOn(productModel, 'findByIdAndDelete').mockResolvedValue({ _id: "8976876" });
 
-// test("Delete Product - failure", async () => {
-//   // Mock the `findByIdAndDelete` method to throw an error
-//   const mockError = new Error("Database query failed");
-//   productModel.findByIdAndDelete = jest.fn().mockRejectedValue(mockError);
+  productModel.findByIdAndDelete = findByIdAndDeleteMock;
 
-//   const req = { params: { pid: "1" } };
-//   const res = createMockResponse();
+  const req = { params: { pid: "8976876" } }; // Mock request with product ID
+  const res = createMockResponse();
 
-//   // Call the controller
-//   await deleteProductController(req, res);
+  // Call the controller
+  await deleteProductController(req, res);
 
-//   // Assertions
-//   expect(res.status).toHaveBeenCalledWith(500); // Expect a 500 status code
-//   expect(res.send).toHaveBeenCalledWith(
-//     expect.objectContaining({
-//       success: false,
-//       message: "Error while deleting product",
-//       error: mockError,
-//     })
-//   );
-// });
+  // Assertions
+  expect(findByIdAndDeleteMock).toHaveBeenCalled();
+  expect(res.status).toHaveBeenCalledWith(500); // Expect a 500 status code
+  expect(res.send).toHaveBeenCalledWith(
+    expect.objectContaining({
+      success: false,
+      message: "Error while deleting product",
+      error: new Error("Delete failed"), // Compare the message property of the error
+    })
+  );
+});
