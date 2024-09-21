@@ -468,3 +468,250 @@ test("Delete Product - failure", async () => {
     })
   );
 });
+
+
+// Test updateProductController method
+const mockOldProductData = {
+  _id: "1",
+  name: "Old Product",
+  description: "Old description",
+  price: 100,
+  category: "Old Category",
+  quantity: 10,
+  shipping: true,
+  slug: "old-product",
+  photo: {
+    data: Buffer.from(""),
+    contentType: "",
+  },
+  save: jest.fn().mockResolvedValue(true), // Mock the save method to resolve successfully
+};
+
+const mockNewProductData = {
+  params: { pid: "1" },
+  fields: {
+    name: "updated product",
+    description: "Updated description",
+    price: 200,
+    category: "Updated Category",
+    quantity: 20,
+    shipping: false,
+  },
+  files: {
+    photo: {
+      path: "client/public/images/a1.png",
+      size: 500000, 
+      type: "image/png",
+    },
+  },
+};
+
+test("Update Product - success", async () => {
+  // Mock data for an existing product
+  const mockProductData = mockOldProductData;
+
+  // Mock `findByIdAndUpdate` to return the mock product
+  const mockFindByIdAndUpdate = jest
+    .spyOn(productModel, "findByIdAndUpdate")
+    .mockResolvedValue(mockProductData);
+
+  // Mock the request with new product data and a photo
+  const req = mockNewProductData;
+
+  // Mock the `fs.readFileSync` method to return fake photo data
+  jest.spyOn(fs, "readFileSync").mockReturnValue(Buffer.from("mock photo data"));
+
+  // Mock the response object
+  const res = createMockResponse();
+
+  // Call the controller
+  await updateProductController(req, res);
+
+  // Assertions
+  expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
+    "1",
+    expect.objectContaining({
+      ...mockNewProductData.fields, // Spread the fields object
+      slug: "updated-product",      // Manually add the slug field
+    }),
+    { new: true }
+  );
+
+  expect(res.status).toHaveBeenCalledWith(201);
+  expect(res.send).toHaveBeenCalledWith({
+    success: true,
+    message: "Product Updated Successfully",
+    products: mockProductData,
+  });
+});
+
+
+test("Update Product - test slugify - expect success", async () => {
+  // Mock data for an existing product
+  const mockProductData = mockOldProductData;
+
+  // Mock `findByIdAndUpdate` to return the mock product
+  const mockFindByIdAndUpdate = jest
+    .spyOn(productModel, "findByIdAndUpdate")
+    .mockResolvedValue(mockProductData);
+
+  // Mock the request with new product data and a photo
+  const req = {...mockNewProductData, shipping: false,};
+
+  // Mock the `fs.readFileSync` method to return fake photo data
+  jest.spyOn(fs, "readFileSync").mockReturnValue(Buffer.from("mock photo data"));
+
+  // Mock the response object
+  const res = createMockResponse();
+
+  // Call the controller
+  await updateProductController(req, res);
+
+  // Assertions
+  expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
+    "1",
+    expect.objectContaining({
+      ...mockNewProductData.fields, // Spread the fields object
+      shipping: false,
+      slug: "updated-product",      // Manually add the slug field
+    }),
+    { new: true }
+  );
+
+  expect(res.status).toHaveBeenCalledWith(201);
+  expect(res.send).toHaveBeenCalledWith({
+    success: true,
+    message: "Product Updated Successfully",
+    products: mockProductData,
+  });
+});
+
+
+test("Update Product - test shipping field - expect success", async () => {
+  // Mock data for an existing product
+  const mockProductData = mockOldProductData;
+
+  // Mock `findByIdAndUpdate` to return the mock product
+  const mockFindByIdAndUpdate = jest
+    .spyOn(productModel, "findByIdAndUpdate")
+    .mockResolvedValue(mockProductData);
+
+  // Mock the request with new product data and a photo
+  const req = {...mockNewProductData, name: "Updated Product",};
+
+  // Mock the `fs.readFileSync` method to return fake photo data
+  jest.spyOn(fs, "readFileSync").mockReturnValue(Buffer.from("mock photo data"));
+
+  // Mock the response object
+  const res = createMockResponse();
+
+  // Call the controller
+  await updateProductController(req, res);
+
+  // Assertions
+  expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
+    "1",
+    expect.objectContaining({
+      ...mockNewProductData.fields, // Spread the fields object
+      slug: "updated-product",      // Manually add the slug field
+    }),
+    { new: true }
+  );
+
+  expect(res.status).toHaveBeenCalledWith(201);
+  expect(res.send).toHaveBeenCalledWith({
+    success: true,
+    message: "Product Updated Successfully",
+    products: mockProductData,
+  });
+});
+
+test("Update Product - fail when name is missing", async () => {
+  const req = { ...mockNewProductData, fields: { ...mockNewProductData.fields, name: "" } };
+  const res = createMockResponse();
+
+  await updateProductController(req, res);
+
+  expect(res.status).toHaveBeenCalledWith(500);
+  expect(res.send).toHaveBeenCalledWith({ error: "Name is Required" });
+});
+
+test("Update Product - fail when description is missing", async () => {
+  const req = { ...mockNewProductData, fields: { ...mockNewProductData.fields, description: "" } };
+  const res = createMockResponse();
+
+  await updateProductController(req, res);
+
+  expect(res.status).toHaveBeenCalledWith(500);
+  expect(res.send).toHaveBeenCalledWith({ error: "Description is Required" });
+});
+
+test("Update Product - fail when price is missing", async () => {
+  const req = { ...mockNewProductData, fields: { ...mockNewProductData.fields, price: "" } };
+  const res = createMockResponse();
+
+  await updateProductController(req, res);
+
+  expect(res.status).toHaveBeenCalledWith(500);
+  expect(res.send).toHaveBeenCalledWith({ error: "Price is Required" });
+});
+
+test("Update Product - fail when category is missing", async () => {
+  const req = { ...mockNewProductData, fields: { ...mockNewProductData.fields, category: "" } };
+  const res = createMockResponse();
+
+  await updateProductController(req, res);
+
+  expect(res.status).toHaveBeenCalledWith(500);
+  expect(res.send).toHaveBeenCalledWith({ error: "Category is Required" });
+});
+
+test("Update Product - fail when quantity is missing", async () => {
+  const req = { ...mockNewProductData, fields: { ...mockNewProductData.fields, quantity: "" } };
+  const res = createMockResponse();
+
+  await updateProductController(req, res);
+
+  expect(res.status).toHaveBeenCalledWith(500);
+  expect(res.send).toHaveBeenCalledWith({ error: "Quantity is Required" });
+});
+
+test("Update Product - fail when photo size is greater than 1MB", async () => {
+  const req = { ...mockNewProductData, files: { photo: { path: "client/public/images/a1.png", size: 2000000, type: "image/png" } } };
+  const res = createMockResponse();
+
+  await updateProductController(req, res);
+
+  expect(res.status).toHaveBeenCalledWith(500);
+  expect(res.send).toHaveBeenCalledWith({ error: "photo is Required and should be less then 1mb" });
+});
+
+
+test("Update Product - fail due to server error", async () => {
+  const req = mockNewProductData;
+  const res = createMockResponse();
+
+  // Mock `findByIdAndUpdate` to throw an error
+  const mockFindByIdAndUpdate = jest
+    .spyOn(productModel, "findByIdAndUpdate")
+    .mockRejectedValue(new Error("Database error"));
+
+  await updateProductController(req, res);
+
+  expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
+    "1",
+    expect.objectContaining({
+      ...mockNewProductData.fields,
+      slug: "updated-product",
+    }),
+    { new: true }
+  );
+
+  // Assertions for error response
+  expect(res.status).toHaveBeenCalledWith(500);
+  expect(res.send).toHaveBeenCalledWith({
+    success: false,
+    error: expect.any(Error),
+    message: "Error in Updte product",
+  });
+});
