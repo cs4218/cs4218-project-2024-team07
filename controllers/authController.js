@@ -29,7 +29,7 @@ export const registerController = async (req, res) => {
     //check user
     const exisitingUser = await userModel.findOne({ email });
     //exisiting user
-    if (exisitingUser) {
+    if (exisitingUser) { // BUG 1: Wrong status code
       return res.status(200).send({
         success: false,
         message: "Already Register please login",
