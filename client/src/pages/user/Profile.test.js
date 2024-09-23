@@ -4,7 +4,6 @@ import Profile from "./Profile";
 import { useAuth } from "../../context/auth";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { log, error } from "console";
 
 jest.mock("axios");
 jest.mock("react-hot-toast");

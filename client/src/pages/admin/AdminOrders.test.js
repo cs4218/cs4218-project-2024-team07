@@ -1,14 +1,21 @@
 import React from "react";
-import { render, waitFor } from "@testing-library/react";
-import Orders from "./Orders";
-import { useAuth } from "../../context/auth";
 import axios from "axios";
+import { useAuth } from "../../context/auth";
+import AdminOrders from "./AdminOrders";
+import {
+  render,
+  waitFor,
+  fireEvent,
+  screen,
+  within,
+} from "@testing-library/react";
 
 jest.mock("axios");
+jest.mock("react-hot-toast");
+jest.mock("../../components/AdminMenu");
 jest.mock("./../../components/Layout", () => ({ children }) => (
   <div>{children}</div>
 ));
-jest.mock("../../components/UserMenu");
 jest.mock("../../context/auth");
 jest.mock("moment", () => ({
   __esModule: true,
@@ -17,13 +24,8 @@ jest.mock("moment", () => ({
   })),
 }));
 
-const testInitializationOfOrders = (
-  Component,
-  apiUrl,
-  mockOrdersData,
-  componentName = Component.name
-) => {
-  it(`Initialization of successful ${componentName}`, async () => {
+const testInitializationOfOrders = (Component, apiUrl, mockOrdersData) => {
+  it(`Initialization of successful ${Component.name}`, async () => {
     axios.get.mockResolvedValue({ data: mockOrdersData });
 
     const { container } = render(<Component />);
@@ -62,7 +64,7 @@ const testInitializationOfOrders = (
     });
   });
 
-  it(`Initialization of non-successful ${componentName}`, async () => {
+  it(`Initialization of non-successful ${Component.name}`, async () => {
     const failedOrderData = [
       {
         _id: "order2",
@@ -103,12 +105,8 @@ const testInitializationOfOrders = (
   });
 };
 
-const testApiErrorHandling = (
-  Component,
-  apiUrl,
-  componentName = Component.name
-) => {
-  it(`Getting ${componentName} API error`, async () => {
+const testApiErrorHandling = (Component, apiUrl) => {
+  it(`Getting ${Component.name} API error`, async () => {
     const error = new Error("API error");
     const consoleSpy = jest.spyOn(console, "log");
     axios.get.mockRejectedValue(error);
@@ -124,24 +122,20 @@ const testApiErrorHandling = (
   });
 };
 
-const testTokenBehavior = (
-  Component,
-  apiUrl,
-  componentName = Component.name
-) => {
+const testTokenBehavior = (Component, apiUrl) => {
   const renderWithAuth = (auth) => {
     useAuth.mockReturnValue([auth, jest.fn()]);
     return render(<Component />);
   };
 
-  it(`${componentName} not called if no token`, () => {
+  it(`${Component.name} not called if no token`, () => {
     const initialAuth = { token: null };
     renderWithAuth(initialAuth);
 
     expect(axios.get).not.toHaveBeenCalled();
   });
 
-  it(`${componentName} called if token changes`, async () => {
+  it(`${Component.name} called if token changes`, async () => {
     const initialAuth = { token: null };
     const newAuth = { token: "valid-token" };
 
@@ -157,7 +151,7 @@ const testTokenBehavior = (
   });
 };
 
-describe("Initialization of orders", () => {
+describe("Initialization of AdminOrders", () => {
   const setAuthMock = jest.fn();
   const mockOrdersData = [
     {
@@ -202,14 +196,13 @@ describe("Initialization of orders", () => {
   });
 
   testInitializationOfOrders(
-    Orders,
-    "/api/v1/auth/orders",
-    mockOrdersData,
-    "Orders"
+    AdminOrders,
+    "/api/v1/auth/all-orders",
+    mockOrdersData
   );
 });
 
-describe("API check for orders", () => {
+describe("API check for AdminOrders", () => {
   const setAuthMock = jest.fn();
 
   // Default mock authenticated user
@@ -230,9 +223,130 @@ describe("API check for orders", () => {
     jest.clearAllMocks();
   });
 
-  testApiErrorHandling(Orders, "/api/v1/auth/orders", "Orders");
+  testApiErrorHandling(AdminOrders, "/api/v1/auth/all-orders");
 });
 
-describe("Token tests for orders", () => {
-  testTokenBehavior(Orders, "/api/v1/auth/orders", "Orders");
+describe("Token tests for AdminOrders", () => {
+  testTokenBehavior(AdminOrders, "/api/v1/auth/all-orders");
+});
+
+describe("Change order status for AdminOrders", () => {
+  beforeEach(() => {
+    axios.get.mockResolvedValue({
+      data: [
+        {
+          _id: "1",
+          status: "Not Process",
+          buyer: { name: "John Doe" },
+          createAt: new Date(),
+          payment: { success: true },
+          products: [
+            {
+              _id: "product1",
+              name: "Product 1",
+              description: "Description",
+              price: 100,
+            },
+          ],
+        },
+      ],
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("Successfully change status for AdminOrders", async () => {
+    const consoleSpy = jest.spyOn(console, "log");
+    axios.put.mockResolvedValue({ data: {} });
+    const mockStatusOption = "Shipped";
+
+    render(<AdminOrders />);
+
+    const selectButton = await screen.findByRole("combobox");
+    fireEvent.mouseDown(selectButton);
+
+    const newStatusOption = screen.getByText(mockStatusOption);
+    fireEvent.click(newStatusOption);
+
+    expect(axios.put).toHaveBeenCalledWith(`/api/v1/auth/order-status/1`, {
+      status: mockStatusOption,
+    });
+    expect(consoleSpy).not.toHaveBeenCalled();
+    consoleSpy.mockRestore();
+  });
+
+  it("Unsuccessfully change status for AdminOrders", async () => {
+    const error = new Error("API error");
+    const mockStatusOption = "Shipped";
+    const consoleSpy = jest.spyOn(console, "log");
+
+    axios.put.mockRejectedValueOnce(error);
+
+    render(<AdminOrders />);
+
+    const selectButton = await screen.findByRole("combobox");
+    fireEvent.mouseDown(selectButton);
+
+    const newStatusOption = screen.getByText(mockStatusOption);
+    fireEvent.click(newStatusOption);
+
+    await waitFor(() => {
+      expect(axios.put).toHaveBeenCalledWith(`/api/v1/auth/order-status/1`, {
+        status: mockStatusOption,
+      });
+    });
+
+    expect(consoleSpy).toHaveBeenCalledWith(error);
+    consoleSpy.mockRestore();
+  });
+});
+
+describe("Given order status for AdminOrders", () => {
+  beforeEach(() => {
+    axios.get.mockResolvedValue({
+      data: [
+        {
+          _id: "1",
+          status: "Not Process",
+          buyer: { name: "John Doe" },
+          createAt: new Date(),
+          payment: { success: true },
+          products: [
+            {
+              _id: "product1",
+              name: "Product 1",
+              description: "Description",
+              price: 100,
+            },
+          ],
+        },
+      ],
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("Check available statuses for AdminOrders in correct format", async () => {
+    axios.put.mockResolvedValue({ data: {} });
+
+    render(<AdminOrders />);
+    const selectButton = await screen.findByRole("combobox");
+    fireEvent.mouseDown(selectButton);
+    const dropdown = within(screen.getByRole("listbox"));
+    const optionElements = dropdown.getAllByRole("option");
+
+    const options = [
+      "Not Process",
+      "Processing",
+      "Shipped",
+      "Delivered",
+      "Cancelled",
+    ];
+    const renderedOptions = optionElements.map((option) => option.textContent);
+    expect(renderedOptions).toEqual(options);
+  });
 });
