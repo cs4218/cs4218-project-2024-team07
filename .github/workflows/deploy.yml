@@ -19,23 +19,54 @@ jobs:
         with:
           node-version: "14"
 
+      # Install project dependencies including Babel and Jest
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm run test
+      # Install additional Babel dependencies needed for Jest
+      - name: Install Babel for Jest
+        run: |
+          npm install --save-dev @babel/core @babel/preset-env babel-jest
 
+      # Create a Jest configuration with Babel on the fly
+      - name: Create Jest Config
+        run: |
+          echo 'module.exports = {' > jest.config.js
+          echo '  transform: {' >> jest.config.js
+          echo '    "^.+\\\\.[t|j]sx?$": "babel-jest"' >> jest.config.js
+          echo '  },' >> jest.config.js
+          echo '  transformIgnorePatterns: [' >> jest.config.js
+          echo '    "/node_modules/(?!bson)"' >> jest.config.js
+          echo '  ]' >> jest.config.js
+          echo '};' >> jest.config.js
+
+      # Create Babel configuration on the fly
+      - name: Create Babel Config
+        run: |
+          echo '{ "presets": ["@babel/preset-env"] }' > .babelrc
+
+      # Run tests with Jest and Babel
+      - name: Run tests for FE
+        run: npm run test:frontend
+
+      - name: Run tests for BE
+        run: npm run test:backend
+
+      # Build the project
       - name: Build the project
         run: npm run build
 
+      # Install MarkBind globally
       - name: Install MarkBind
         run: npm install -g markbind-cli
 
+      # Build MarkBind site
       - name: Build MarkBind site
         run: |
           cd client
           markbind build
 
+      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
