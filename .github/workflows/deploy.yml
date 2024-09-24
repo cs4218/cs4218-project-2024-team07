@@ -19,31 +19,37 @@ jobs:
         with:
           node-version: "14"
 
-      # Install project dependencies including Babel and Jest
-      - name: Install dependencies
+      # Install dependencies for BE
+      - name: Install root-level dependencies
         run: npm install
 
-      # Install additional Babel dependencies needed for Jest
-      - name: Install Babel for Jest
+      # Install dependencies for FE
+      - name: Install client dependencies
         run: |
-          npm install --save-dev @babel/core @babel/preset-env babel-jest
+          cd client
+          npm install
 
-      # Create a Jest configuration with Babel on the fly
-      - name: Create Jest Config
-        run: |
-          echo 'module.exports = {' > jest.config.js
-          echo '  transform: {' >> jest.config.js
-          echo '    "^.+\\\\.[t|j]sx?$": "babel-jest"' >> jest.config.js
-          echo '  },' >> jest.config.js
-          echo '  transformIgnorePatterns: [' >> jest.config.js
-          echo '    "/node_modules/(?!bson)"' >> jest.config.js
-          echo '  ]' >> jest.config.js
-          echo '};' >> jest.config.js
+      # # Install additional Babel dependencies needed for Jest
+      # - name: Install Babel for Jest
+      #   run: |
+      #     npm install --save-dev @babel/core @babel/preset-env babel-jest
 
-      # Create Babel configuration on the fly
-      - name: Create Babel Config
-        run: |
-          echo '{ "presets": ["@babel/preset-env"] }' > .babelrc
+      # # Create a Jest configuration with Babel on the fly
+      # - name: Create Jest Config
+      #   run: |
+      #     echo 'module.exports = {' > jest.config.js
+      #     echo '  transform: {' >> jest.config.js
+      #     echo '    "^.+\\\\.[t|j]sx?$": "babel-jest"' >> jest.config.js
+      #     echo '  },' >> jest.config.js
+      #     echo '  transformIgnorePatterns: [' >> jest.config.js
+      #     echo '    "/node_modules/(?!bson)"' >> jest.config.js
+      #     echo '  ]' >> jest.config.js
+      #     echo '};' >> jest.config.js
+
+      # # Create Babel configuration on the fly
+      # - name: Create Babel Config
+      #   run: |
+      #     echo '{ "presets": ["@babel/preset-env"] }' > .babelrc
 
       # Run tests with Jest and Babel
       - name: Run tests for FE
