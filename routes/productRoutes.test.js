@@ -6,6 +6,7 @@ import request from "supertest";
 import app from "../server.js";
 import jwt from "jsonwebtoken";
 import * as productController from "../controllers/productController.js";
+import formidable from "express-formidable";
 
 dotenv.config();
 
@@ -21,10 +22,31 @@ jest.mock("../controllers/productController.js", () => ({
     res.status(201).json({ message: "Product created successfully" })
   ),
 }));
+jest.mock('express-formidable', () => jest.fn(() => (req, res, next) => {
+    req.fields = {
+      name: 'Test Product',
+      description: 'A test product description',
+      price: 100,
+      category: 'Test Category',
+      quantity: 10,
+    };
+    req.files = {
+      image: {
+        filepath: '/mock/path/to/file.jpg',
+        originalFilename: 'mockFile.jpg',
+        mimetype: 'image/jpeg',
+        size: 12345,
+      },
+    };
+    next();
+  }));
 
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URL);
-});
+    await mongoose.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+  });
 
 describe("Product Routes successful calls", () => {
   let req, res;
@@ -55,18 +77,10 @@ describe("Product Routes successful calls", () => {
     };
   });
 
-  const generateToken = (userId) => {
-    return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-  };
-
   // POST /create-product
   it("should create a product (POST /create-product)", async () => {
-    const token = generateToken("testUserId");
     const response = await request(app)
       .post("/api/v1/product/create-product")
-      .set("Authorization", `${token}`)
       .send(req.body);
 
     expect(response.status).toBe(201);
