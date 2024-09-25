@@ -1,57 +1,76 @@
 import { jest } from "@jest/globals";
-import userModel from "../models/userModel.js";
 import { hashPassword } from "../helpers/authHelper";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import request from "supertest";
 import app from "../server.js";
+import jwt from "jsonwebtoken";
+import * as productController from "../controllers/productController.js";
 
 dotenv.config();
 
 jest.mock("../middlewares/authMiddleware", () => ({
-  requireSignIn: jest.fn((req, res, next) => next()),
+  requireSignIn: jest.fn((req, res, next) => {
+    req.user = { id: "testUserId" };
+    next();
+  }),
   isAdmin: jest.fn((req, res, next) => next()),
+}));
+jest.mock("../controllers/productController.js", () => ({
+  createProductController: jest.fn((req, res) =>
+    res.status(201).json({ message: "Product created successfully" })
+  ),
 }));
 
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(process.env.MONGO_URL);
 });
 
-describe("Product Routes successful calls", async () => {
-  req = {
-    body: {
-      name: "Test Product",
-      description: "A test product description",
-      price: 100,
-      category: "Test Category",
-      quantity: 10,
-    },
-    params: { pid: "12345" }, // for routes with params like update or delete
-    query: {}, // for routes with query params like pagination
-  };
+describe("Product Routes successful calls", () => {
+  let req, res;
+  beforeEach(async () => {
+    req = {
+      body: {
+        name: "Test Product",
+        description: "A test product description",
+        price: 100,
+        category: "Test Category",
+        quantity: 10,
+      },
+      params: { pid: "12345" },
+      files: {
+        image: {
+          filepath: "/path/to/mock/file.jpg",
+          originalFilename: "file.jpg",
+          mimetype: "image/jpeg",
+          size: 12345,
+        },
+      },
+    };
 
-  res = {
-    status: jest.fn().mockReturnThis(),
-    send: jest.fn(),
-    json: jest.fn(),
-  };
+    res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+      json: jest.fn(),
+    };
+  });
 
-  // Clean up any test data before each test
-  await productModel.deleteOne({ name: "Test Product" });
+  const generateToken = (userId) => {
+    return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+  };
 
   // POST /create-product
   it("should create a product (POST /create-product)", async () => {
+    const token = generateToken("testUserId");
     const response = await request(app)
-      .post("/create-product")
-      .set("Content-Type", "multipart/form-data")
-      .field("name", "Test Product")
-      .field("price", "100");
+      .post("/api/v1/product/create-product")
+      .set("Authorization", `${token}`)
+      .send(req.body);
 
     expect(response.status).toBe(201);
-    expect(productController.createProductController).toHaveBeenCalled();
+    expect(response.body.message).toBe("Product created successfully");
   });
 
   // PUT /update-product/:pid
@@ -202,4 +221,8 @@ describe("Inappropriate CRUD operations on API", () => {
     expect(response.status).toBe(405); // Expected response for unsupported methods
     expect(response.body.message).toBe("Method Not Allowed");
   });
+});
+
+afterAll(async () => {
+  await mongoose.connection.close();
 });
