@@ -287,10 +287,12 @@ describe("HomePage Component", () => {
         axios.get.mockImplementation((url) => {
             if (url === "/api/v1/category/get-category") {
                 return Promise.resolve({ data: mockCategories });
-            } else if (url.startsWith("/api/v1/product/product-list/")) {
+            } else if (url.endsWith("/product-list/1")) {
                 return Promise.resolve({ data: mockProductsPage1 });
+            } else if (url.endsWith("/product-list/2")) {
+                return Promise.resolve({ data: mockProductsPage2 });
             } else if (url === "/api/v1/product/product-count") {
-                return Promise.resolve({ data: { total: 2 } });
+                return Promise.resolve({ data: { total: 4 } });
             }
         });
 
@@ -305,6 +307,14 @@ describe("HomePage Component", () => {
         await waitFor(() => {
             expect(screen.getByText("Product 1")).toBeInTheDocument();
         });
+
+        expect(screen.queryByText(/Loadmore/i)).toBeInTheDocument();
+
+        fireEvent.click(screen.getByText(/Loadmore/i));
+        
+        await waitFor(() => {
+            expect(screen.getByText("Product 3")).toBeInTheDocument();
+        })
 
         expect(screen.queryByText(/Loadmore/i)).not.toBeInTheDocument();
     });
