@@ -109,7 +109,7 @@ const testApiErrorHandling = (
   componentName = Component.name
 ) => {
   it(`Getting ${componentName} API error`, async () => {
-    const error = new Error("API error");
+    const error = new Error("Error details");
     const consoleSpy = jest.spyOn(console, "log");
     axios.get.mockRejectedValue(error);
 

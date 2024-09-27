@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1727276574772" clover="3.2.0">
-  <project timestamp="1727276574772" name="All files">
-    <metrics statements="339" coveredstatements="165" conditionals="86" coveredconditionals="29" methods="39" coveredmethods="12" elements="464" coveredelements="206" complexity="0" loc="339" ncloc="339" packages="7" files="14" classes="14"/>
+<coverage generated="1727418892666" clover="3.2.0">
+  <project timestamp="1727418892666" name="All files">
+    <metrics statements="339" coveredstatements="170" conditionals="86" coveredconditionals="30" methods="39" coveredmethods="13" elements="464" coveredelements="213" complexity="0" loc="339" ncloc="339" packages="7" files="14" classes="14"/>
     <package name="cs4218-project-2024-team07">
       <metrics statements="14" coveredstatements="12" conditionals="4" coveredconditionals="2" methods="2" coveredmethods="0"/>
       <file name="server.js" path="/Users/asonata/Documents/University/CS4218/cs4218-project-2024-team07/server.js">
@@ -34,7 +34,7 @@
       </file>
     </package>
     <package name="cs4218-project-2024-team07.controllers">
-      <metrics statements="260" coveredstatements="95" conditionals="80" coveredconditionals="26" methods="30" coveredmethods="7"/>
+      <metrics statements="260" coveredstatements="100" conditionals="80" coveredconditionals="27" methods="30" coveredmethods="8"/>
       <file name="authController.js" path="/Users/asonata/Documents/University/CS4218/cs4218-project-2024-team07/controllers/authController.js">
         <metrics statements="91" coveredstatements="40" conditionals="44" coveredconditionals="22" methods="8" coveredmethods="2"/>
         <line num="7" count="3" type="stmt"/>
@@ -172,15 +172,15 @@
         <line num="109" count="1" type="stmt"/>
       </file>
       <file name="productController.js" path="/Users/asonata/Documents/University/CS4218/cs4218-project-2024-team07/controllers/productController.js">
-        <metrics statements="130" coveredstatements="16" conditionals="32" coveredconditionals="0" methods="17" coveredmethods="0"/>
+        <metrics statements="130" coveredstatements="21" conditionals="32" coveredconditionals="1" methods="17" coveredmethods="1"/>
         <line num="10" count="3" type="stmt"/>
         <line num="13" count="3" type="stmt"/>
         <line num="20" count="3" type="stmt"/>
-        <line num="21" count="0" type="stmt"/>
-        <line num="23" count="0" type="stmt"/>
-        <line num="24" count="0" type="stmt"/>
-        <line num="26" count="0" type="cond" truecount="0" falsecount="6"/>
-        <line num="28" count="0" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="26" count="1" type="cond" truecount="1" falsecount="5"/>
+        <line num="28" count="1" type="stmt"/>
         <line num="30" count="0" type="stmt"/>
         <line num="32" count="0" type="stmt"/>
         <line num="34" count="0" type="stmt"/>
@@ -324,17 +324,17 @@
       <file name="authMiddleware.js" path="/Users/asonata/Documents/University/CS4218/cs4218-project-2024-team07/middlewares/authMiddleware.js">
         <metrics statements="14" coveredstatements="10" conditionals="2" coveredconditionals="1" methods="2" coveredmethods="2"/>
         <line num="5" count="3" type="stmt"/>
-        <line num="6" count="1" type="stmt"/>
-        <line num="7" count="1" type="stmt"/>
-        <line num="11" count="1" type="stmt"/>
-        <line num="12" count="1" type="stmt"/>
+        <line num="6" count="2" type="stmt"/>
+        <line num="7" count="2" type="stmt"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="12" count="2" type="stmt"/>
         <line num="14" count="0" type="stmt"/>
         <line num="19" count="3" type="stmt"/>
-        <line num="20" count="1" type="stmt"/>
-        <line num="21" count="1" type="stmt"/>
-        <line num="22" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="20" count="2" type="stmt"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="22" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="23" count="0" type="stmt"/>
-        <line num="28" count="1" type="stmt"/>
+        <line num="28" count="2" type="stmt"/>
         <line num="31" count="0" type="stmt"/>
         <line num="32" count="0" type="stmt"/>
       </file>

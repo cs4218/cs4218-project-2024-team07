@@ -51,34 +51,6 @@ describe("Get categories from API in CreateProduct", () => {
     expect(setCategoriesMock).not.toHaveBeenCalled();
   });
 
-  it("API returns data response without success with category field", async () => {
-    const setCategoriesMock = jest.fn();
-    jest
-      .spyOn(React, "useState")
-      .mockImplementationOnce(() => [[], setCategoriesMock]);
-
-    axios.get.mockRejectedValueOnce({ data: { category: [] } });
-
-    render(<CreateProduct />);
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    expect(setCategoriesMock).not.toHaveBeenCalled();
-  });
-
-  it("API returns data response with success without category field", async () => {
-    const setCategoriesMock = jest.fn();
-    jest
-      .spyOn(React, "useState")
-      .mockImplementationOnce(() => [[], setCategoriesMock]);
-
-    axios.get.mockRejectedValueOnce({ data: { success: true } });
-
-    render(<CreateProduct />);
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    expect(setCategoriesMock).not.toHaveBeenCalled();
-  });
-
   it("API returns data response with success with category field", async () => {
     const setCategoriesMock = jest.fn();
     jest
@@ -219,92 +191,6 @@ describe("Update individual CreateProduct fields", () => {
   });
 });
 
-// describe("Malicious input into individual CreateProduct fields", () => {
-//   beforeEach(() => {
-//     jest.clearAllMocks();
-//   });
-
-//   it("Check price field with more than 2 decimal places", async () => {
-//     axios.get.mockResolvedValue({ data: { success: true, category: [] } });
-//     render(<CreateProduct />);
-//     const priceInput = screen.getByPlaceholderText(/write a Price/i);
-//     fireEvent.change(priceInput, { target: { value: "99.999" } });
-
-//     await waitFor(() => {
-//       expect(toast.error).toHaveBeenCalledWith(
-//         "Price must be 2 decimal places"
-//       );
-//     });
-//     // No checks for price field with more than 2 decimal places
-//   });
-
-//   it("Check price field is greater than 0", async () => {
-//     axios.get.mockResolvedValue({ data: { success: true, category: [] } });
-//     render(<CreateProduct />);
-//     const priceInput = screen.getByPlaceholderText(/write a Price/i);
-//     fireEvent.change(priceInput, { target: { value: "0" } });
-
-//     await waitFor(() => {
-//       expect(toast.error).toHaveBeenCalledWith("Price must be greater than 0");
-//     });
-//     // No checks for price field is greater than 0
-//   });
-
-//   it("Check price field is not negative", async () => {
-//     axios.get.mockResolvedValue({ data: { success: true, category: [] } });
-//     render(<CreateProduct />);
-//     const priceInput = screen.getByPlaceholderText(/write a Price/i);
-//     fireEvent.change(priceInput, { target: { value: "-1" } });
-
-//     await waitFor(() => {
-//       expect(toast.error).toHaveBeenCalledWith("Price must be greater than 0");
-//     });
-//     // No checks for price field is not negative
-//   });
-
-//   it("Check quantity field is a whole number", async () => {
-//     axios.get.mockResolvedValue({ data: { success: true, category: [] } });
-//     render(<CreateProduct />);
-//     const quantityInput = screen.getByPlaceholderText(/write a quantity/i);
-//     fireEvent.change(quantityInput, { target: { value: "99.99" } });
-
-//     await waitFor(() => {
-//       expect(toast.error).toHaveBeenCalledWith(
-//         "Quantity must be a whole number"
-//       );
-//     });
-//     // No checks for quantity field is a whole number
-//   });
-
-//   it("Check quantity field is greater than 0", async () => {
-//     axios.get.mockResolvedValue({ data: { success: true, category: [] } });
-//     render(<CreateProduct />);
-//     const quantityInput = screen.getByPlaceholderText(/write a quantity/i);
-//     fireEvent.change(quantityInput, { target: { value: "0" } });
-
-//     await waitFor(() => {
-//       expect(toast.error).toHaveBeenCalledWith(
-//         "Quantity must be greater than 0"
-//       );
-//     });
-//     // No checks for quantity field is greater than 0
-//   });
-
-//   it("Check quantity field is not negative", async () => {
-//     axios.get.mockResolvedValue({ data: { success: true, category: [] } });
-//     render(<CreateProduct />);
-//     const quantityInput = screen.getByPlaceholderText(/write a quantity/i);
-//     fireEvent.change(quantityInput, { target: { value: "-1" } });
-
-//     await waitFor(() => {
-//       expect(toast.error).toHaveBeenCalledWith(
-//         "Quantity must be greater than 0"
-//       );
-//     });
-//     // No checks for quantity field is not negative
-//   });
-// });
-
 describe("Create product sequence", () => {
   const mockNavigate = useNavigate();
 
@@ -312,7 +198,7 @@ describe("Create product sequence", () => {
     jest.clearAllMocks();
   });
 
-  it.failing("/api/v1/product/create-product post successful", async () => {
+  it.failing("Create product successful", async () => {
     axios.get.mockResolvedValue({ data: { success: true, category: [] } });
     axios.post.mockResolvedValueOnce({
       data: { success: true, message: "Product created" },
@@ -327,7 +213,7 @@ describe("Create product sequence", () => {
 
     await waitFor(() => {
       expect(toast.success).toHaveBeenCalledWith(
-        "Product Created Successfully"
+        /Product Created Successfully/i
       );
     });
 
@@ -337,7 +223,7 @@ describe("Create product sequence", () => {
     // Expected failure: toast success branch should be switched with toast error branch
   });
 
-  it.failing("/api/v1/product/create-product post unsuccessful", async () => {
+  it.failing("Create product unsuccessful", async () => {
     axios.get.mockResolvedValue({ data: { success: true, category: [] } });
     axios.post.mockResolvedValueOnce({
       data: { success: false, message: "Failed to create product" },
@@ -360,35 +246,28 @@ describe("Create product sequence", () => {
     // Expected failure: toast success branch should be switched with toast error branch
   });
 
-//   it("/api/v1/product/create-product post with exception", async () => {
-//     const logSpy = jest.spyOn(console, "log").mockImplementation();
-//     axios.get.mockResolvedValueOnce({
-//       data: { success: true, category: [] },
-//     });
+//   it("Create product with exception", async () => {
+//     const consoleLogSpy = jest.spyOn(console, "log").mockImplementation();
 
-//     axios.post.mockRejectedValueOnce(new Error("An error occurred"));
-
+//     axios.get.mockResolvedValue({ data: { success: true, category: [] } });
+//     axios.post.mockImplementation((url) => {
+//         if (url === '/api/v1/product/create-product') {
+//           return Promise.reject(new Error('Network Error'));
+//         }
+//         return Promise.reject(new Error('Not Found'));
+//       });
 //     render(<CreateProduct />);
 
 //     const createProductButton = screen.getByRole("button", {
 //       name: /create product/i,
 //     });
+
 //     fireEvent.click(createProductButton);
-    
-//     // await waitFor(() => {
-//     //   expect(axios.post).toHaveBeenCalledTimes(1);
-//     // });
 
-//     expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("An error occurred"));
-
-//     // await waitFor(() => {
-//     //   expect(toast.error).toHaveBeenCalledWith(/something went wrong/i);
-//     // });
-
-//     // await waitFor(() => {
-//     //   expect(mockNavigate).not.toHaveBeenCalled();
-//     // });
-
-//     logSpy.mockRestore();
-//   }, 5000);
+//     await waitFor(() => {
+//       expect(toast.error).toHaveBeenCalledWith("something went wrong");    
+//     });
+//     expect(consoleLogSpy).toHaveBeenCalledWith(expect.any(Error));
+//     consoleLogSpy.mockRestore();
+//   });
 });

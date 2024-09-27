@@ -65,7 +65,7 @@ describe("Successful updating of Profile", () => {
     ]);
   });
 
-  it("Update when authenticated user details changes", async () => {
+  it("Update render when authenticated user details changes", async () => {
     const { rerender } = render(<Profile />);
 
     useAuth.mockReturnValue([
@@ -90,7 +90,7 @@ describe("Successful updating of Profile", () => {
     expect(await screen.findByDisplayValue("456 Elm St")).toBeInTheDocument();
   });
 
-  it("Successful update of profile", async () => {
+  it("Successful update of state in profile", async () => {
     axios.put.mockResolvedValue({
       data: {
         updatedUser: {
@@ -207,6 +207,7 @@ describe("Server update failure of Profile", () => {
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Some error"));
+    // Axios response body should contain error field, not errro
   });
 });
 

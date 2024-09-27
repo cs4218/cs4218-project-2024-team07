@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.12% </span>
+                <span class="strong">15.9% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/132</span>
+                <span class='fraction'>21/132</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">3.12% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/32</span>
+                <span class='fraction'>1/32</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">5.88% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/17</span>
+                <span class='fraction'>1/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.3% </span>
+                <span class="strong">16.15% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/130</span>
+                <span class='fraction'>21/130</span>
             </div>
         
             
@@ -459,14 +459,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -834,24 +834,24 @@ var gateway = new braintree.BraintreeGateway({
   privateKey: process.env.BRAINTREE_PRIVATE_KEY,
 });
 &nbsp;
-export const createProductController = <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
-<span class="cstat-no" title="statement not covered" >  try {</span>
+export const createProductController = async (req, res) =&gt; {
+  try {
     const { name, description, price, category, quantity, shipping } =
-<span class="cstat-no" title="statement not covered" >      req.fields;</span>
-    const { photo } = <span class="cstat-no" title="statement not covered" >req.files;</span>
+      req.fields;
+    const { photo } = req.files;
     //alidation
-<span class="cstat-no" title="statement not covered" >    switch (true) {</span>
+    switch (true) {
       case !name:
-<span class="cstat-no" title="statement not covered" >        return res.status(500).send({ error: "Name is Required" });</span>
-      case !description:
+        return res.status(500).send({ error: "Name is Required" });
+<span class="branch-1 cbranch-no" title="branch not covered" >      case !description:</span>
 <span class="cstat-no" title="statement not covered" >        return res.status(500).send({ error: "Description is Required" });</span>
-      case !price:
+<span class="branch-2 cbranch-no" title="branch not covered" >      case !price:</span>
 <span class="cstat-no" title="statement not covered" >        return res.status(500).send({ error: "Price is Required" });</span>
-      case !category:
+<span class="branch-3 cbranch-no" title="branch not covered" >      case !category:</span>
 <span class="cstat-no" title="statement not covered" >        return res.status(500).send({ error: "Category is Required" });</span>
-      case !quantity:
+<span class="branch-4 cbranch-no" title="branch not covered" >      case !quantity:</span>
 <span class="cstat-no" title="statement not covered" >        return res.status(500).send({ error: "Quantity is Required" });</span>
-      case photo &amp;&amp; photo.size &gt; 1000000:
+<span class="branch-5 cbranch-no" title="branch not covered" >      case photo &amp;&amp; photo.size &gt; 1000000:</span>
 <span class="cstat-no" title="statement not covered" >        return res</span>
           .status(500)
           .send({ error: "photo is Required and should be less then 1mb" });
@@ -1198,7 +1198,7 @@ export const brainTreePaymentController = <span class="fstat-no" title="function
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-09-25T15:02:54.757Z
+                at 2024-09-27T06:34:52.655Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

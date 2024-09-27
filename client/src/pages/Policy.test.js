@@ -16,4 +16,6 @@ describe("Policy component presence", () => {
     const paragraphElements = screen.getAllByText(/add privacy policy/i);
     expect(paragraphElements.length).toBe(7);
   });
+
+  // Assume that the "add privacy policy" 7 times are intended and not filled in
 });

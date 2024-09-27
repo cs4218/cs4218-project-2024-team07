@@ -107,7 +107,7 @@ const testInitializationOfOrders = (Component, apiUrl, mockOrdersData) => {
 
 const testApiErrorHandling = (Component, apiUrl) => {
   it(`Getting ${Component.name} API error`, async () => {
-    const error = new Error("API error");
+    const error = new Error("Error details");
     const consoleSpy = jest.spyOn(console, "log");
     axios.get.mockRejectedValue(error);
 
@@ -278,7 +278,7 @@ describe("Change order status for AdminOrders", () => {
   });
 
   it("Unsuccessfully change status for AdminOrders", async () => {
-    const error = new Error("API error");
+    const error = new Error("Error details");
     const mockStatusOption = "Shipped";
     const consoleSpy = jest.spyOn(console, "log");
 
@@ -346,6 +346,7 @@ describe("Given order status for AdminOrders", () => {
       "Delivered",
       "Cancelled",
     ];
+    // Major spelling issues, expected to fail 
     const renderedOptions = optionElements.map((option) => option.textContent);
     expect(renderedOptions).toEqual(options);
   });
