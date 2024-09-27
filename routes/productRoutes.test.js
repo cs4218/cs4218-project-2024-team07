@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import request from "supertest";
 import app from "../server.js";
-import jwt from "jsonwebtoken";
 import * as productController from "../controllers/productController.js";
 import formidable from "express-formidable";
 import { log } from "console";
