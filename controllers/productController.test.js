@@ -743,3 +743,143 @@ test("Update Product - fail due to server error", async () => {
     message: "Error in Updte product",
   });
 });
+
+import categoryModel from "../models/categoryModel.js";
+
+jest.mock('../models/categoryModel.js');
+
+describe('productCategoryController', () => {
+  let req;
+  let res;
+
+  categoryModel.findOne = jest.fn();
+  productModel.find = jest.fn();
+  productModel.populate = jest.fn();
+
+  const mockCategory = { _id: '63f7c3c8e1234a3b2d4e6789', name: 'Electronics', slug: 'electronics' };
+  const mockProducts = [
+    {
+      _id: '63f7c3c8e1234a3b2d4e678a',
+      name: 'Laptop',
+      slug: 'laptop',
+      description: 'A high-performance laptop',
+      price: 1200,
+      category: mockCategory._id,
+      quantity: 10,
+      shipping: true,
+    },
+    {
+      _id: '63f7c3c8e1234a3b2d4e678b',
+      name: 'Smartphone',
+      slug: 'smartphone',
+      description: 'A latest-gen smartphone',
+      price: 800,
+      category: mockCategory._id,
+      quantity: 20,
+      shipping: false,
+    },
+  ];
+
+  beforeEach(() => {
+    // Reset all mocks before each test
+    jest.clearAllMocks();
+
+    // Mock request object
+    req = {
+      params: {
+        slug: 'electronics', // Example slug
+      },
+    };
+
+    // Mock response object with jest.fn() spies
+    res = {
+      status: jest.fn(() => res), // Allows chaining
+      send: jest.fn(),
+      json: jest.fn(),
+    };
+  });
+
+  // Test cases will go here
+  it('should fetch category and products successfully and send a 200 response', async () => {
+    categoryModel.findOne.mockResolvedValue(mockCategory);
+    
+    productModel.find.mockReturnThis();
+    productModel.populate.mockResolvedValue(mockProducts);
+    
+    // Invoke the controller
+    await productCategoryController(req, res);
+  
+    // Assertions
+    expect(categoryModel.findOne).toHaveBeenCalledWith({ slug: 'electronics' });
+    expect(productModel.find).toHaveBeenCalledWith({ category: mockCategory });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith({
+      success: true,
+      category: mockCategory,
+      products: mockProducts,
+    });
+  });
+
+  it('should return empty products array if category is not found', async () => {
+    // Mock categoryModel.findOne to return null
+    categoryModel.findOne.mockResolvedValue(null);
+  
+    // Mock productModel.find to return an empty array
+    productModel.find.mockReturnThis();
+    productModel.populate.mockResolvedValue([]);
+  
+    // Invoke the controller
+    await productCategoryController(req, res);
+  
+    // Assertions
+    expect(categoryModel.findOne).toHaveBeenCalledWith({ slug: 'electronics' });
+    expect(productModel.find).toHaveBeenCalledWith({ category: null });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith({
+      success: true,
+      category: null,
+      products: [],
+    });
+  });
+
+  it('should handle errors and send a 400 response with error message when failing to get category', async () => {
+    // Mock categoryModel.findOne to throw an error
+    const mockError = new Error('Database error');
+    categoryModel.findOne.mockRejectedValue(mockError);
+  
+    // Invoke the controller
+    await productCategoryController(req, res);
+  
+    // Assertions
+    expect(categoryModel.findOne).toHaveBeenCalledWith({ slug: 'electronics' });
+    // productModel.find should not be called since findOne failed
+    expect(productModel.find).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({
+      success: false,
+      error: mockError,
+      message: 'Error While Getting products',
+    });
+  });
+
+  it('should handle errors and send a 400 response with error message when failing to get products', async () => {
+    // Mock categoryModel.findOne to throw an error
+    const mockError = new Error('Database error');
+    categoryModel.findOne.mockResolvedValue(mockCategory);
+    productModel.find.mockReturnThis();
+    productModel.populate.mockRejectedValue(mockError);
+  
+    // Invoke the controller
+    await productCategoryController(req, res);
+  
+    // Assertions
+    expect(categoryModel.findOne).toHaveBeenCalledWith({ slug: 'electronics' });
+    expect(productModel.find).toHaveBeenCalledWith({ category: mockCategory });
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({
+      success: false,
+      error: mockError,
+      message: 'Error While Getting products',
+    });
+  });
+});
