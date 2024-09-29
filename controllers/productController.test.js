@@ -744,6 +744,104 @@ test("Update Product - fail due to server error", async () => {
   });
 });
 
+describe("productListController", () => {
+  let req, res;
+
+  const perPage = 6;
+  const page = 2;
+
+  const mockProducts = [
+    { _id: "63f7c3c8e1234a3b2d4e678b", name: "Product 1", createdAt: new Date() },
+    { _id: "63f7c3c8e1234a3b2d4e678c", name: "Product 2", createdAt: new Date() },
+  ];
+
+  const mockFind = jest.fn().mockReturnThis();
+  const mockSelect = jest.fn().mockReturnThis();
+  const mockSkip = jest.fn().mockReturnThis();
+  const mockLimit = jest.fn().mockReturnThis();
+  const mockSort = jest.fn().mockResolvedValue(mockProducts);
+
+  beforeEach(() => {
+    // Mock the request object
+    req = {
+      params: {
+        page: page,
+      },
+    };
+
+    // Mock the response object with jest.fn() spies
+    res = {
+      status: jest.fn(() => res),
+      send: jest.fn(),
+    };
+
+    // Reset all mocks before each test
+    jest.clearAllMocks();
+
+    // Assign mock implementations
+    productModel.find = mockFind;
+    productModel.select = mockSelect;
+    productModel.skip = mockSkip;
+    productModel.limit = mockLimit;
+    productModel.sort = mockSort;
+  });
+
+  it("should fetch products successfully and send a 200 response", async () => {
+    // Invoke the controller
+    await productListController(req, res);
+
+    // Assertions
+    expect(mockFind).toHaveBeenCalledWith({}); // Check if find was called with correct parameters
+    expect(mockSelect).toHaveBeenCalledWith("-photo"); // Check if select was called correctly
+    expect(mockSkip).toHaveBeenCalledWith((page - 1) * perPage); // Check if skip was called correctly
+    expect(mockLimit).toHaveBeenCalledWith(perPage); // Check if limit was called with perPage value
+    expect(mockSort).toHaveBeenCalledWith({ createdAt: -1 }); // Check if sort was called correctly
+    expect(res.status).toHaveBeenCalledWith(200); // Ensure correct response status
+    expect(res.send).toHaveBeenCalledWith({
+      success: true,
+      products: mockProducts,
+    });
+  });
+
+  it("should fetch products successfully and send a 200 response when page is undefined", async () => {
+    req.params = {};
+    
+    // Invoke the controller
+    await productListController(req, res);
+
+    // Assertions
+    expect(mockFind).toHaveBeenCalledWith({}); // Check if find was called with correct parameters
+    expect(mockSelect).toHaveBeenCalledWith("-photo"); // Check if select was called correctly
+    expect(mockSkip).toHaveBeenCalledWith(0); // Check if skip was called correctly
+    expect(mockLimit).toHaveBeenCalledWith(perPage); // Check if limit was called with perPage value
+    expect(mockSort).toHaveBeenCalledWith({ createdAt: -1 }); // Check if sort was called correctly
+    expect(res.status).toHaveBeenCalledWith(200); // Ensure correct response status
+    expect(res.send).toHaveBeenCalledWith({
+      success: true,
+      products: mockProducts,
+    });
+  });
+
+  it("should handle errors and send a 400 response with an error message", async () => {
+    // Mock sort to throw an error
+    const mockError = new Error("Database error");
+    productModel.sort.mockRejectedValue(mockError);
+
+    // Invoke the controller
+    await productListController(req, res);
+
+    // Assertions
+    expect(mockFind).toHaveBeenCalledWith({}); // Check if find was called with correct parameters
+    expect(res.status).toHaveBeenCalledWith(400); // Ensure correct response status
+    expect(res.send).toHaveBeenCalledWith({
+      success: false,
+      message: "error in per page ctrl",
+      error: mockError,
+    });
+  });
+});
+
+
 describe("searchProductController", () => {
   let req, res;
 
