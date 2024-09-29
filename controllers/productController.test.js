@@ -744,6 +744,94 @@ test("Update Product - fail due to server error", async () => {
   });
 });
 
+describe("realtedProductController", () => {
+  let req, res;
+
+  const pid = "63f7c3c8e1234a3b2d4e678a";
+  const cid = "63f7c3c8e1234a3b2d4e6789";
+
+  const mockProducts = [
+    {
+      _id: "63f7c3c8e1234a3b2d4e678b",
+      name: "Related Product 1",
+      category: cid,
+    },
+    {
+      _id: "63f7c3c8e1234a3b2d4e678c",
+      name: "Related Product 2",
+      category: cid,
+    },
+  ];
+
+  const mockFind = jest.fn().mockReturnThis();
+  const mockSelect = jest.fn().mockReturnThis();
+  const mockLimit = jest.fn().mockReturnThis();
+  const mockPopulate = jest.fn().mockResolvedValue(mockProducts);
+
+  beforeEach(() => {
+    // Mock the request object
+    req = {
+      params: {
+        pid: pid, // Example product ID to exclude
+        cid: cid, // Example category ID
+      },
+    };
+
+    // Mock the response object with jest.fn() spies
+    res = {
+      status: jest.fn(() => res),
+      send: jest.fn(),
+    };
+
+    // Reset all mocks before each test
+    jest.clearAllMocks();
+
+    productModel.find = mockFind;
+    productModel.select = mockSelect
+    productModel.limit = mockLimit
+    productModel.populate = mockPopulate
+  });
+
+  it("should fetch related products successfully and send a 200 response", async () => {
+    // Invoke the controller
+    await realtedProductController(req, res);
+
+    // Assertions
+    expect(mockFind).toHaveBeenCalledWith({
+      category: req.params.cid,
+      _id: { $ne: req.params.pid },
+    }); // Check if find was called with correct parameters
+    expect(mockSelect).toHaveBeenCalledWith("-photo"); // Check if select was called correctly
+    expect(mockLimit).toHaveBeenCalledWith(3); // Check if limit was called with 3
+    expect(mockPopulate).toHaveBeenCalledWith("category"); // Check if populate was called correctly
+    expect(res.status).toHaveBeenCalledWith(200); // Ensure correct response status
+    expect(res.send).toHaveBeenCalledWith({
+      success: true,
+      products: expect.any(Array),
+    });
+  });
+
+  it("should handle errors and send a 400 response with an error message", async () => {
+    const mockError = new Error("Database error");
+    productModel.populate.mockRejectedValue(mockError);
+
+    // Invoke the controller
+    await realtedProductController(req, res);
+
+    // Assertions
+    expect(productModel.find).toHaveBeenCalledWith({
+      category: req.params.cid,
+      _id: { $ne: req.params.pid },
+    }); // Check if find was called with correct parameters
+    expect(res.status).toHaveBeenCalledWith(400); // Ensure correct response status
+    expect(res.send).toHaveBeenCalledWith({
+      success: false,
+      message: "error while geting related product",
+      error: mockError,
+    });
+  });
+});
+
 import categoryModel from "../models/categoryModel.js";
 
 jest.mock('../models/categoryModel.js');
@@ -805,7 +893,7 @@ describe('productCategoryController', () => {
     
     productModel.find.mockReturnThis();
     productModel.populate.mockResolvedValue(mockProducts);
-    
+
     // Invoke the controller
     await productCategoryController(req, res);
   
