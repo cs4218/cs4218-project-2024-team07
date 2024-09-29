@@ -744,6 +744,89 @@ test("Update Product - fail due to server error", async () => {
   });
 });
 
+describe("searchProductController", () => {
+  let req, res;
+
+  const keyword = "laptop";
+
+  const mockResults = [
+    {
+      _id: "63f7c3c8e1234a3b2d4e678b",
+      name: "Laptop 1",
+      description: "A powerful laptop for gaming",
+    },
+    {
+      _id: "63f7c3c8e1234a3b2d4e678c",
+      name: "Laptop 2",
+      description: "A lightweight laptop for travel",
+    },
+  ];
+
+  const mockFind = jest.fn().mockReturnThis();
+  const mockSelect = jest.fn().mockResolvedValue(mockResults);
+
+  
+
+  beforeEach(() => {
+    // Mock the request object
+    req = {
+      params: {
+        keyword: keyword,
+      },
+    };
+
+    // Mock the response object with jest.fn() spies
+    res = {
+      status: jest.fn(() => res),
+      send: jest.fn(),
+      json: jest.fn(),
+    };
+
+    // Reset all mocks before each test
+    jest.clearAllMocks();
+
+    productModel.find = mockFind;
+    productModel.select = mockSelect;
+  });
+
+  it("should fetch search results successfully and send a 200 response", async () => {
+    // Invoke the controller
+    await searchProductController(req, res);
+
+    // Assertions
+    expect(mockFind).toHaveBeenCalledWith({
+      $or: [
+        { name: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
+      ],
+    }); // Check if find was called with correct parameters
+    expect(mockSelect).toHaveBeenCalledWith("-photo"); // Check if select was called correctly
+    expect(res.json).toHaveBeenCalledWith(mockResults); // Ensure correct response JSON
+  });
+
+  it("should handle errors and send a 400 response with an error message", async () => {
+    const mockError = new Error("Database error");
+    productModel.select.mockRejectedValue(mockError);
+
+    // Invoke the controller
+    await searchProductController(req, res);
+
+    // Assertions
+    expect(mockFind).toHaveBeenCalledWith({
+      $or: [
+        { name: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
+      ],
+    }); // Check if find was called with correct parameters
+    expect(res.status).toHaveBeenCalledWith(400); // Ensure correct response status
+    expect(res.send).toHaveBeenCalledWith({
+      success: false,
+      message: "Error In Search Product API",
+      error: mockError,
+    });
+  });
+});
+
 describe("realtedProductController", () => {
   let req, res;
 
@@ -768,6 +851,8 @@ describe("realtedProductController", () => {
   const mockLimit = jest.fn().mockReturnThis();
   const mockPopulate = jest.fn().mockResolvedValue(mockProducts);
 
+  
+
   beforeEach(() => {
     // Mock the request object
     req = {
@@ -787,9 +872,9 @@ describe("realtedProductController", () => {
     jest.clearAllMocks();
 
     productModel.find = mockFind;
-    productModel.select = mockSelect
-    productModel.limit = mockLimit
-    productModel.populate = mockPopulate
+    productModel.select = mockSelect;
+    productModel.limit = mockLimit;
+    productModel.populate = mockPopulate;
   });
 
   it("should fetch related products successfully and send a 200 response", async () => {
