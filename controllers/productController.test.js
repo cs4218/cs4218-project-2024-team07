@@ -744,6 +744,65 @@ test("Update Product - fail due to server error", async () => {
   });
 });
 
+describe("productCountController", () => {
+  let req, res;
+
+  const mockTotal = 42;
+
+  const mockFind = jest.fn().mockReturnThis();
+  const mockEstimateDocumentCount = jest.fn().mockResolvedValue(mockTotal);
+
+  beforeEach(() => {
+    // Mock request object
+    req = {};
+
+    // Mock response object with jest.fn() spies
+    res = {
+      status: jest.fn(() => res),
+      send: jest.fn(),
+    };
+
+    // Reset all mocks before each test
+    jest.clearAllMocks();
+
+    productModel.find = mockFind;
+    productModel.estimatedDocumentCount = mockEstimateDocumentCount;
+  });
+
+  it("should return the total count of products and send a 200 response", async () => {
+    // Invoke the controller
+    await productCountController(req, res);
+
+    // Assertions
+    expect(productModel.find).toHaveBeenCalledWith({});
+    expect(productModel.estimatedDocumentCount).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith({
+      success: true,
+      total: mockTotal,
+    });
+  });
+
+  it("should handle errors and send a 400 response with an error message", async () => {
+    // Mock productModel.find().estimatedDocumentCount() to throw an error
+    const mockError = new Error("Database error");
+    productModel.estimatedDocumentCount.mockRejectedValue(mockError);
+
+    // Invoke the controller
+    await productCountController(req, res);
+
+    // Assertions
+    expect(productModel.find).toHaveBeenCalledWith({});
+    expect(productModel.estimatedDocumentCount).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({
+      message: "Error in product count",
+      error: mockError,
+      success: false,
+    });
+  });
+});
+
 describe("productListController", () => {
   let req, res;
 
