@@ -246,28 +246,29 @@ describe("Create product sequence", () => {
     // Expected failure: toast success branch should be switched with toast error branch
   });
 
-//   it("Create product with exception", async () => {
-//     const consoleLogSpy = jest.spyOn(console, "log").mockImplementation();
+  it("Create product with exception", async () => {
+    const consoleLogSpy = jest.spyOn(console, "log").mockImplementation();
 
-//     axios.get.mockResolvedValue({ data: { success: true, category: [] } });
-//     axios.post.mockImplementation((url) => {
-//         if (url === '/api/v1/product/create-product') {
-//           return Promise.reject(new Error('Network Error'));
-//         }
-//         return Promise.reject(new Error('Not Found'));
-//       });
-//     render(<CreateProduct />);
+    axios.get.mockResolvedValue({ data: { success: true, category: [] } });
+    axios.post.mockRejectedValueOnce(new Error("Error posting to path"));
 
-//     const createProductButton = screen.getByRole("button", {
-//       name: /create product/i,
-//     });
+    render(<CreateProduct />);
 
-//     fireEvent.click(createProductButton);
+    const createProductButton = screen.getByRole("button", {
+      name: /create product/i,
+    });
 
-//     await waitFor(() => {
-//       expect(toast.error).toHaveBeenCalledWith("something went wrong");    
-//     });
-//     expect(consoleLogSpy).toHaveBeenCalledWith(expect.any(Error));
-//     consoleLogSpy.mockRestore();
-//   });
+    fireEvent.click(createProductButton); // Call handleCreate
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith("something went wrong");
+    });
+
+    await waitFor(() => {
+      expect(consoleLogSpy).toHaveBeenCalledWith(expect.any(Error));
+    });
+
+    // Restore console spy
+    consoleLogSpy.mockRestore();
+  });
 });
