@@ -272,7 +272,15 @@ describe("Profile controller", () => {
   it("should return 200 if profile updated successfully", async () => {
     await updateProfileController(req, res);
     expect(findByIdMock).toHaveBeenCalled();
-    expect(findByIdAndUpdateMock).toHaveBeenCalled();
+    expect(findByIdAndUpdateMock).toHaveBeenCalledWith(
+      "12345",
+      expect.objectContaining({
+        address: "123 Test Street",
+        name: "Test User",
+        phone: "1234567890",
+      }),
+      { new: true }
+    );
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.send).toHaveBeenCalledWith({
       success: true,
@@ -286,6 +294,99 @@ describe("Profile controller", () => {
         address: "123 Test Street",
       },
     });
+  });
+
+  it.failing("should return 400 with invalid name and phone, and empty password message", async () => {
+    req = {
+      user: { _id: "12345" },
+      body: {
+        name: "139847",
+        email: "valid@example.com",
+        password: "",
+        phone: "elifhaoeid",
+        address: "123 Main St",
+      },
+    };
+    findByIdAndUpdateMock = jest
+      .spyOn(userModel, "findByIdAndUpdate")
+      .mockRejectedValue({
+        _id: "12345",
+        name: "139847",
+        email: "valid@example.com",
+        password: "",
+        phone: "elifhaoeid",
+        address: "123 Main St",
+      });
+    await updateProfileController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: expect.stringMatching(/invalid name, phone and password should be 6 characters long/i),
+    });
+    // Assumption is that there should be more checks on
+    // each of the fields before updating in the userModel
+  });
+
+  it.failing("should return 400 with invalid email and too long address", async () => {
+    req = {
+      user: { _id: "12345" },
+      body: {
+        name: "John Doe",
+        email: "$&#*@example.com",
+        password: "123456",
+        phone: "1234567890",
+        address: "Loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong address",
+      },
+    };
+    findByIdAndUpdateMock = jest
+      .spyOn(userModel, "findByIdAndUpdate")
+      .mockRejectedValue({
+        _id: "12345",
+        name: "John Doe",
+        email: "$&#*@example.com",
+        password: "123456",
+        phone: "1234567890",
+        address: "Loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong address",
+      });
+    await updateProfileController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: expect.stringMatching(/invalid email and address should be between 6 and 75 characters/i),
+    });
+    // Assumption is that there should be more checks on
+    // each of the fields before updating in the userModel
+  });
+
+  it.failing("should return 400 with invalid name, phone, email and too short address", async () => {
+    req = {
+      user: { _id: "12345" },
+      body: {
+        name: "@#$%",
+        email: "",
+        password: "123456",
+        phone: "@#$%",
+        address: "",
+      },
+    };
+    findByIdAndUpdateMock = jest
+      .spyOn(userModel, "findByIdAndUpdate")
+      .mockRejectedValue({
+        _id: "12345",
+        name: "@#$%",
+        email: "",
+        password: "123456",
+        phone: "@#$%",
+        address: "",
+      });
+    await updateProfileController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: expect.stringMatching(/invalid name, phone, email and address should be between 6 and 75 characters/i),
+    });
+    // Assumption is that there should be more checks on
+    // each of the fields before updating in the userModel
   });
 
   it.failing(
@@ -306,21 +407,26 @@ describe("Profile controller", () => {
     }
   );
 
-  it("should return error if userModel cannot be accessed", async () => {
-    const error = new Error("Error details here");
-    findByIdAndUpdateMock = jest
-      .spyOn(userModel, "findByIdAndUpdate")
-      .mockRejectedValueOnce(error);
+  it.failing(
+    "should return 500 error if userModel cannot be accessed",
+    async () => {
+      const error = new Error("Error details here");
+      findByIdAndUpdateMock = jest
+        .spyOn(userModel, "findByIdAndUpdate")
+        .mockRejectedValueOnce(error);
 
-    await updateProfileController(req, res);
-    expect(findByIdMock).toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.send).toHaveBeenCalledWith({
-      success: false,
-      message: expect.stringMatching(/error while update profile/i),
-      error: error,
-    });
-  });
+      await updateProfileController(req, res);
+      expect(findByIdMock).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.send).toHaveBeenCalledWith({
+        success: false,
+        message: expect.stringMatching(/error while update profile/i),
+        error: error,
+      });
+      // The 500 HTTP error should be thrown since we do not know
+      // the reason for the error.
+    }
+  );
 });
 
 describe("GetOrders Controller", () => {
@@ -522,21 +628,24 @@ describe("OrderStatus Controller", () => {
     expect(res.json).toHaveBeenCalledWith(updatedOrder);
   });
 
-  it.failing("should return 500 if an error occurs during the update", async () => {
-    const error = new Error("Update failed");
-    jest.spyOn(orderModel, "findByIdAndUpdate").mockRejectedValue(error);
+  it.failing(
+    "should return 500 if an error occurs during the update",
+    async () => {
+      const error = new Error("Update failed");
+      jest.spyOn(orderModel, "findByIdAndUpdate").mockRejectedValue(error);
 
-    await orderStatusController(req, res);
+      await orderStatusController(req, res);
 
-    expect(orderModel.findByIdAndUpdate).toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.send).toHaveBeenCalledWith({
-      success: false,
-      message: expect.stringMatching(/error while updating order/i),
-      error,
-    });
-    // Incorrect spelling of message
-  });
+      expect(orderModel.findByIdAndUpdate).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.send).toHaveBeenCalledWith({
+        success: false,
+        message: expect.stringMatching(/error while updating order/i),
+        error,
+      });
+      // Incorrect spelling of message
+    }
+  );
 });
 
 // Close the connection after tests
