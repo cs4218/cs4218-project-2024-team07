@@ -270,5 +270,9 @@ describe("Create product sequence", () => {
 
     // Restore console spy
     consoleLogSpy.mockRestore();
+
+    // Axios post in CreateProduct handleCreate function is not awaited,
+    // meaning that the data may not even be gotten before running the if 
+    // else statements, leading to the wrong output.
   });
 });
