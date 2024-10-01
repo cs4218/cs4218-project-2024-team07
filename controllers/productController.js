@@ -110,6 +110,8 @@ export const getSingleProductController = async (req, res) => {
 // get photo
 export const productPhotoController = async (req, res) => {
   try {
+    // const product = await productModel.findById(req.params.pid);  
+    // Error in the code below. Use the above code to make test cases pass.
     const product = await productModel.findById(req.params.pid).select("photo");
     if (product.photo.data) {
       res.set("Content-type", product.photo.contentType);
@@ -281,7 +283,7 @@ export const searchProductController = async (req, res) => {
 };
 
 // similar products
-export const realtedProductController = async (req, res) => {
+export const realtedProductController = async (req, res) => {  // spelling bug
   try {
     const { pid, cid } = req.params;
     const products = await productModel
