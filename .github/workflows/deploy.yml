@@ -30,7 +30,7 @@ jobs:
           npm install
 
       # List the contents of the directory to check the structure
-      - name: Check directory contents
+      - name: Check directory contents in client
         run: |
           echo "Listing contents of /home/runner/work/cs4218-project-2024-team07/cs4218-project-2024-team07/client"
           ls -R /home/runner/work/cs4218-project-2024-team07/cs4218-project-2024-team07/client
