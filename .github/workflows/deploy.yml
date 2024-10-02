@@ -29,6 +29,7 @@ jobs:
           BRAINTREE_MERCHANT_ID: hmrc3kfrt2xrvtvp
           BRAINTREE_PUBLIC_KEY: d3rnqcjwn7zk4fpt
           BRAINTREE_PRIVATE_KEY: 767ed9ddd903781349d4c2af441f8eaa
+          NODE_ENV: test
         run: npm install
 
       # Install dependencies for FE
