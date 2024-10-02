@@ -30,10 +30,43 @@ jobs:
           npm install
 
       # List the contents of the directory to check the structure
-      - name: Check directory contents in client
+      # - name: Check directory contents in client
+      #   run: |
+      #     echo "Listing contents of /home/runner/work/cs4218-project-2024-team07/cs4218-project-2024-team07/client"
+      #     ls -R /home/runner/work/cs4218-project-2024-team07/cs4218-project-2024-team07/client
+
+
+      # Create the site.json file
+      - name: Create site.json file
         run: |
-          echo "Listing contents of /home/runner/work/cs4218-project-2024-team07/cs4218-project-2024-team07/client"
-          ls -R /home/runner/work/cs4218-project-2024-team07/cs4218-project-2024-team07/client
+          echo '{
+            "baseUrl": "",
+            "titlePrefix": "",
+            "titleSuffix": "",
+            "ignore": [
+              "_markbind/layouts/*",
+              "_markbind/logs/*",
+              "_site/*",
+              "site.json",
+              "*.md",
+              "*.njk",
+              ".git/*",
+              ".gitignore",
+              "node_modules/*"
+            ],
+            "pagesExclude": ["node_modules/*"],
+            "pages": [
+              {
+                "src": "index.md"
+              },
+              {
+                "glob": ["**/index.md", "**/*.md"]
+              }
+            ],
+            "deploy": {
+              "message": "Site Update."
+            }
+          }' > /home/runner/work/cs4218-project-2024-team07/cs4218-project-2024-team07/client/site.json
 
 
       # Install additional Babel dependencies needed for Jest
