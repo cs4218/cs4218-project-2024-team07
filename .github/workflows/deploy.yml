@@ -51,11 +51,11 @@ jobs:
         run: |
           echo '{ "presets": ["@babel/preset-env"] }' > .babelrc
 
-      - name: Run tests for BE
-        run: npm run test:backend
-
       - name: Run tests for FE
         run: npm run test:frontend
+
+      - name: Run tests for BE
+        run: npm run test:backend
 
       # Build the project
       - name: Build the project
