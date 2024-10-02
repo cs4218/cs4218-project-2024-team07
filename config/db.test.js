@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
-import connectDB from './db';
+import {connectDB} from './db';
 import { jest } from '@jest/globals';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 describe('connectDB', () => {
   const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
@@ -23,9 +26,10 @@ describe('connectDB', () => {
     await connectDB();
 
     // Assert
-    expect(mongooseConnectSpy).toHaveBeenCalledWith(process.env.MONGO_URL);
+    const calledWithUrl = mongooseConnectSpy.mock.calls[0][0];
+    expect(calledWithUrl).toMatch(/mongodb:\/\/127\.0\.0\.1:\d+\//); // Match dynamic port
     expect(consoleLogSpy).toHaveBeenCalledWith(
-      `Connected To Mongodb Database ${mockConnection.connection.host}`.bgMagenta.white
+      `Connected to in-memory MongoDB at ${calledWithUrl}`.bgMagenta.white
     );
   });
 
@@ -38,9 +42,10 @@ describe('connectDB', () => {
     await connectDB();
 
     // Assert
-    expect(mongooseConnectSpy).toHaveBeenCalledWith(process.env.MONGO_URL);
+    const calledWithUrl = mongooseConnectSpy.mock.calls[0][0];
+    expect(calledWithUrl).toMatch(/mongodb:\/\/127\.0\.0\.1:\d+\//); // Match dynamic port
     expect(consoleLogSpy).toHaveBeenCalledWith(
-      `Error in Mongodb ${mockError}`.bgRed.white
+      `Error in MongoDB connection: ${mockError}`.bgRed.white
     );
   });
 });

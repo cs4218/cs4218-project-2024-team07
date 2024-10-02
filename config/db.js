@@ -4,7 +4,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 
 let mongoServer; // this is in memory db for unit testing
 
-const connectDB = async () => {
+export const connectDB = async () => {
     try {
         // Check if running in test environment
         if (process.env.NODE_ENV === 'test') {
@@ -15,7 +15,7 @@ const connectDB = async () => {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             });
-            console.log(`Connected to in-memory MongoDB at ${uri}`.bgGreen.white);
+            console.log(`Connected to in-memory MongoDB at ${uri}`.bgMagenta.white);
         } else {
             // Connect to the actual MongoDB database
             const conn = await mongoose.connect(process.env.MONGO_URL, {
@@ -30,7 +30,7 @@ const connectDB = async () => {
 };
 
 // Function to disconnect from the database, useful for test cleanup
-const disconnectDB = async () => {
+export const disconnectDB = async () => {
     try {
         await mongoose.connection.close();
         if (mongoServer) {
@@ -42,4 +42,3 @@ const disconnectDB = async () => {
     }
 };
 
-export { connectDB, disconnectDB };
