@@ -2,8 +2,9 @@ name: Deploy MarkBind site to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build-and-deploy:
@@ -113,15 +114,18 @@ jobs:
       # Install MarkBind globally
       - name: Install MarkBind
         run: npm install -g markbind-cli
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       # Build MarkBind site
       - name: Build MarkBind site
         run: |
           cd client
           markbind build
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
