@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14"
+          node-version: "16"
 
       # Install dependencies for BE
       - name: Install backend dependencies
@@ -28,6 +28,46 @@ jobs:
         run: |
           cd client
           npm install
+
+      # List the contents of the directory to check the structure
+      # - name: Check directory contents in client
+      #   run: |
+      #     echo "Listing contents of /home/runner/work/cs4218-project-2024-team07/cs4218-project-2024-team07/client"
+      #     ls -R /home/runner/work/cs4218-project-2024-team07/cs4218-project-2024-team07/client
+
+
+      # Create the site.json file
+      - name: Create site.json file
+        run: |
+          echo '{
+            "baseUrl": "",
+            "titlePrefix": "",
+            "titleSuffix": "",
+            "ignore": [
+              "_markbind/layouts/*",
+              "_markbind/logs/*",
+              "_site/*",
+              "site.json",
+              "*.md",
+              "*.njk",
+              ".git/*",
+              ".gitignore",
+              "node_modules/*"
+            ],
+            "pagesExclude": ["node_modules/*"],
+            "pages": [
+              {
+                "src": "index.md"
+              },
+              {
+                "glob": ["**/index.md", "**/*.md"]
+              }
+            ],
+            "deploy": {
+              "message": "Site Update."
+            }
+          }' > /home/runner/work/cs4218-project-2024-team07/cs4218-project-2024-team07/client/site.json
+
 
       # Install additional Babel dependencies needed for Jest
       - name: Install Babel for Jest
@@ -51,15 +91,22 @@ jobs:
         run: |
           echo '{ "presets": ["@babel/preset-env"] }' > .babelrc
 
-      - name: Run tests for BE
-        run: npm run test:backend
-
+      # Run tests for FE
       - name: Run tests for FE
         run: npm run test:frontend
 
-      # Build the project
-      - name: Build the project
-        run: npm run build
+      # Run tests for BE with environment variables
+      - name: Run tests for BE
+        env:
+          PORT: 6060
+          DEV_MODE: development
+          MONGO_URL: mongodb+srv://hongsheng:hongsheng123@cs4218-test-cluster.vvmcw.mongodb.net/
+          JWT_SECRET: HGFHGEAD12124322432
+          BRAINTREE_MERCHANT_ID: hmrc3kfrt2xrvtvp
+          BRAINTREE_PUBLIC_KEY: d3rnqcjwn7zk4fpt
+          BRAINTREE_PRIVATE_KEY: 767ed9ddd903781349d4c2af441f8eaa
+          NODE_ENV: test
+        run: npm run test:backend
 
       # Install MarkBind globally
       - name: Install MarkBind

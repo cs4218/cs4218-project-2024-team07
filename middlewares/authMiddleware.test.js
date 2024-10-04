@@ -5,20 +5,22 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import request from 'supertest';
 import { requireSignIn, isAdmin } from './authMiddleware.js';
-
+import { MongoMemoryServer } from 'mongodb-memory-server';
 
 dotenv.config();
 
+let mongoServer; 
 
-// Before all describe blocks, connect to mongodb
+
 beforeAll(async () => {
-    await mongoose.connect(process.env.MONGO_URL, {
+    mongoServer = await MongoMemoryServer.create();
+    const uri = mongoServer.getUri();
+
+    await mongoose.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
-
 });
-
 
 describe('Authentication middleware', () => {
     let req, res, signup_req;
@@ -43,42 +45,35 @@ describe('Authentication middleware', () => {
         }
       };
 
-      // Clean up the database before each test
-      await userModel.deleteOne({ email: 'test-authMiddleware-hs@example.com' });
+      await userModel.deleteMany({}); 
 
+      // Register the user before each test
       await request(app)
       .post('/api/v1/auth/register')
       .send(signup_req.body);
     });
   
     it('should successfully authenticate with the token acquired from login', async () => {
-
-      // Simulate an empty request object for the middleware
       let middlewareReq = {
           headers: {}
       };
 
-
       const loginRes = await request(app)
           .post('/api/v1/auth/login')
           .send(req.body);  
-  
 
       const token = loginRes.body.token;
   
-      // To ensure we have a token from login
+      // Ensure we have a token from login
       expect(token).toBeDefined();
-  
 
       middlewareReq.headers.authorization = token;
   
       // Mock the next function for middleware
       const next = jest.fn();  
-  
 
       await requireSignIn(middlewareReq, {}, next);
   
-
       expect(next).toHaveBeenCalled();
       expect(middlewareReq.user).toBeDefined(); 
       expect(middlewareReq.user).toHaveProperty('_id');  
@@ -89,7 +84,7 @@ describe('Authentication middleware', () => {
         user: {}  
     };
 
-    // set the user to have admin rights
+    // Set the user to have admin rights
     await userModel.updateOne(
         { email: 'test-authMiddleware-hs@example.com' },  
         { $set: { role: 1 } }                             
@@ -101,21 +96,18 @@ describe('Authentication middleware', () => {
 
     const test_id = loginRes.body.user._id;
     middlewareReq.user._id = test_id;
-
     
     const next = jest.fn();  
-
 
     await isAdmin(middlewareReq, {}, next);
     expect(next).toHaveBeenCalled();
     expect(middlewareReq.user).toBeDefined(); 
     expect(middlewareReq.user).toHaveProperty('_id'); 
   });
-
-
 });
 
 
 afterAll(async () => {
-    await mongoose.connection.close();
+    await mongoose.disconnect();  
+    await mongoServer.stop();     
 });
