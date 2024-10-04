@@ -250,7 +250,9 @@ describe("Create product sequence", () => {
     const consoleLogSpy = jest.spyOn(console, "log").mockImplementation();
 
     axios.get.mockResolvedValue({ data: { success: true, category: [] } });
-    axios.post.mockRejectedValueOnce(new Error("Error posting to path"));
+    axios.post.mockImplementation(() => {
+      throw new Error();
+    });
 
     render(<CreateProduct />);
 
@@ -263,16 +265,15 @@ describe("Create product sequence", () => {
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith("something went wrong");
     });
-
+  
     await waitFor(() => {
       expect(consoleLogSpy).toHaveBeenCalledWith(expect.any(Error));
     });
 
-    // Restore console spy
     consoleLogSpy.mockRestore();
 
     // Axios post in CreateProduct handleCreate function is not awaited,
-    // meaning that the data may not even be gotten before running the if 
+    // meaning that the data may not even be gotten before running the if
     // else statements, leading to the wrong output.
   });
 });
