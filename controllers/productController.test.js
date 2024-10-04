@@ -1,5 +1,5 @@
 import { jest } from "@jest/globals";
-// import slugify from "slugify";
+import slugify from "slugify";
 import {
   createProductController,
   getProductController,
@@ -23,8 +23,8 @@ import productModel from "../models/productModel.js";
 jest.mock("../models/productModel");
 // const mockedProductModel = jest.createMockFromModule('../models/productModel.js');
 
-const slugify = jest.createMockFromModule("slugify");
 const fs = jest.createMockFromModule("fs");
+
 
 // console.log(jest.isMockFunction(mockedProductModel)) // false
 console.log("productModel.save: ", productModel); // false
@@ -743,6 +743,379 @@ test("Update Product - fail due to server error", async () => {
     message: "Error in Updte product",
   });
 });
+
+// Pairwise Testing for updateProductController 
+describe('updateProductController - Pairwise Testing', () => {
+  let req, res;
+
+  const mockUpdateProductToDB = async (req) => {
+    productModel.findByIdAndUpdate = jest.fn().mockResolvedValue({
+      _id: "86",
+      name: req.fields.name,
+      description: req.fields.description,
+      price: req.fields.price,
+      category: req.fields.category,
+      quantity: req.fields.quantity,
+      photo: req.files.photo,
+      save: jest.fn().mockResolvedValue(true),
+    });
+  };
+
+  beforeEach(() => {
+    req = {
+      fields: {},
+      files: {},
+      params: { pid: '86' },
+    };
+
+    res = createMockResponse();
+  });
+
+
+  /* 
+    name: Non-String,
+    description: Alphabetical String,
+    price: price < 0,
+    category: Alphabetical String,
+    quantity: 0,
+    photo: { size: 1000000, path: Non-existent Path, type: Non-image }
+  */ 
+  test("Combination 1 => Expected to fail since name is not a string", async () => {
+    req.fields = {
+      name: 4569,
+      description: "I am Jack",
+      price: -21,
+      category: "phone",
+      quantity: 0,
+    };
+    req.files = {
+      photo: {
+        size: 1000000,
+        path: "client/public/non-existent/imageOne.png",
+        type: "application/pdf",
+      },
+    };
+
+    mockUpdateProductToDB(req);
+    await updateProductController(req, res); 
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith({ error: "Name should be a string" });
+    expect(productModel.findByIdAndUpdate).not.toHaveBeenCalled();
+  });
+
+  /* 
+  name: Alphanumeric string with special characters,
+  description: Empty String,
+  price: price >= 0,
+  category: Empty String,
+  quantity: quantity > 0,
+  photo: { size: size > 1000000, path: Existing Path, type: Image }
+  */
+  test("Testing Combination 2 => Expected to fail since name is not an alphabetical string", async () => {
+    req.fields = {
+      name: "Item#123!", 
+      description: "", 
+      price: 10, 
+      category: "", 
+      quantity: 5, 
+    };
+    req.files = {
+      photo: {
+        size: 1500000,
+        path: "client/public/images/a1.png",
+        type: "image/png",
+      },
+    };
+
+    mockUpdateProductToDB(req);
+    await updateProductController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith({ error: "Name should be an alphabetical string" });
+    expect(productModel.findByIdAndUpdate).not.toHaveBeenCalled();
+  });
+
+  /* 
+    name: Non-String,
+    description: Alphabetical String,
+    price: price = 0,
+    category: Alphanumeric string with special characters,
+    quantity: Quantity <= 0,
+    photo: { size <= 1000000, path: Non-existent Path, type: Image }
+  */
+  test("Testing Combination 3 => Expected to fail since name is not a string", async () => {
+    req.fields = {
+      name: 9876, 
+      description: "Tech Item", 
+      price: 0, 
+      category: "technology", 
+      quantity: -1, 
+    };
+    req.files = {
+      photo: {
+        size: 500000,
+        path: "client/public/non-existent/imageThree.png",
+        type: "image/jpeg",
+      },
+    };
+
+    mockUpdateProductToDB(req);
+    await updateProductController(req, res);
+    
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith({ error: "Name should be a string" });
+    expect(productModel.findByIdAndUpdate).not.toHaveBeenCalled();
+  });
+
+
+  /* 
+    name: Empty string,
+    description: Alphanumeric string with special characters,
+    price: price < 0,
+    category: Empty string,
+    quantity: Quantity <= 0,
+    photo: { size <= 1000000, path: Existing Path, type: Non-image }
+  */
+    test("Testing Combination 4 => Expected to fail since name is empty", async () => {
+      req.fields = {
+        name: "", 
+        description: "Gadget X", 
+        price: -50, 
+        category: "", 
+        quantity: 0, 
+      };
+      req.files = {
+        photo: {
+          size: 900000,
+          path: "client/public/images/a2.png",
+          type: "application/pdf",
+        },
+      };
+
+      mockUpdateProductToDB(req);
+      await updateProductController(req, res);
+      
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.send).toHaveBeenCalledWith({ error: "Name is required" });
+      expect(productModel.findByIdAndUpdate).not.toHaveBeenCalled();
+    });
+
+    /* 
+    name: Alphabetical String,
+    description: Alphanumeric string with special characters,
+    price: price = 0,
+    category: Alphabetical string,
+    quantity: Quantity > 0,
+    photo: { size = 1000000, path: "Existing Path", type: "Image" }
+    */
+    test("Testing Combination 5 => Expected to pass", async () => {
+      req.fields = {
+        name: "Camera", 
+        description: "High-tech gadget", 
+        price: 0, 
+        category: "photography", 
+        quantity: 10, 
+      };
+      req.files = {
+        photo: {
+          size: 1000000,
+          path: "client/public/images/a3.png",
+          type: "image/png",
+        },
+      };
+
+      
+      mockUpdateProductToDB(req);
+      await updateProductController(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(productModel.findByIdAndUpdate).toHaveBeenCalled();
+      expect(res.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          message: "Product Updated Successfully",
+          products: expect.objectContaining({
+            _id: "86",
+            name: "Camera",
+            description: "High-tech gadget",
+            price: 1,
+            category: "photography",
+            quantity: 10,
+            photo: expect.objectContaining({
+              size: 1000000,
+              path: "client/public/images/a3.png",
+              type: "image/png",
+            }),
+          }),
+        })
+      );
+      
+    });
+
+    /* 
+        name: Alphabetical String,
+        description: Empty string,
+        price: price < 0,
+        category: Alphanumeric string with special characters,
+        quantity: Quantity = 0,
+        photo: { size: > 1000000, path: Non-existent Path, type: Non-image }
+    */
+    test("Testing Combination 6 => Expected to fail since description is empty", async () => {
+      req.fields = {
+        name: "Product",
+        description: "",
+        price: -30,
+        category: "Category@123",
+        quantity: 0,
+      };
+      req.files = {
+        photo: {
+          size: 1500000,
+          path: "client/public/images/a3.png",
+          type: "application/pdf",
+        },
+      };
+
+      mockUpdateProductToDB(req);
+      await updateProductController(req, res);
+    
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.send).toHaveBeenCalledWith({ error: "Description cannot be empty" });
+      expect(productModel.findByIdAndUpdate).not.toHaveBeenCalled();
+    });
+
+    /* 
+        name: Non-String,
+        description: Alphanumeric string with special characters,
+        price: price = 0,
+        category: Empty string,
+        quantity: Quantity > 0,
+        photo: { size <= 1000000, path: Existing Path, type: Image }
+    */
+    test("Testing Combination 7 => Expected to fail since name is not a string", async () => {
+      req.fields = {
+        name: 789,
+        description: "Gadget@2021",
+        price: 0,
+        category: "",
+        quantity: 3,
+      };
+      req.files = {
+        photo: {
+          size: 900000,
+          path: "client/public/images/e1.png",
+          type: "image/png",
+        },
+      };
+
+      mockUpdateProductToDB(req);
+      await updateProductController(req, res);
+    
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.send).toHaveBeenCalledWith({ error: "Name should be a string" });
+      expect(productModel.findByIdAndUpdate).not.toHaveBeenCalled();
+    });
+
+    /* 
+        name: Alphabetical String,
+        description: Alphabetical String,
+        price: price >= 0,
+        category: Alphabetical String,
+        quantity: Quantity <= 0,
+        photo: { size = 1000000, path: Existing Path, type: Non-image }
+    */
+    test("Testing Combination 8 => Expected to fail since quantity is less than or equal to 0", async () => {
+      req.fields = {
+        name: "Smartphone",
+        description: "Latest model",
+        price: 500,
+        category: "electronics",
+        quantity: 0,
+      };
+      req.files = {
+        photo: {
+          size: 1000000,
+          path: "client/public/images/e2.png",
+          type: "application/pdf",
+        },
+      };
+
+      mockUpdateProductToDB(req);
+      await updateProductController(req, res);
+    
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.send).toHaveBeenCalledWith({ error: "Quantity must be greater than 0" });
+      expect(productModel.findByIdAndUpdate).not.toHaveBeenCalled();
+    });
+
+    /* 
+    name: Alphanumeric string with special characters,
+    description: Empty string,
+    price: price < 0,
+    category: Alphabetical String,
+    quantity: Quantity > 0,
+    photo: { size <= 1000000, path: "Non-existent Path", type: "Image" }
+    */
+    test("Testing Combination 9 => Expected to fail since name is not an alphabetical string", async () => {
+      req.fields = {
+        name: "Product123!",
+        description: "",
+        price: -25,
+        category: "appliances",
+        quantity: 2,
+      };
+      req.files = {
+        photo: {
+          size: 800000,
+          path: "client/public/non-existent/imageTen.png",
+          type: "image/jpeg",
+        },
+      };
+
+      mockUpdateProductToDB(req);
+      await updateProductController(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.send).toHaveBeenCalledWith({ error: "Name should be an alphabetical string" });
+      expect(productModel.findByIdAndUpdate).not.toHaveBeenCalled();
+    });
+
+
+    /* 
+        name: Alphabetical String,
+        description: Alphabetical String,
+        price: price = 0,
+        category: Alphanumeric string with special characters,
+        quantity: Quantity = 0,
+        photo: { size = 1000000, path: Existing Path, type: Image }
+    */
+    test("Testing Combination 10 => Expected to fail since category is not an alphabetical string", async () => {
+      req.fields = {
+        name: "Television",
+        description: "New TV model",
+        price: 0,
+        category: "home-appliance",
+        quantity: 0,
+      };
+      req.files = {
+        photo: {
+          size: 1000000,
+          path: "client/public/images/e3.png",
+          type: "image/jpeg",
+        },
+      };
+
+      mockUpdateProductToDB(req);
+      await updateProductController(req, res);
+    
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.send).toHaveBeenCalledWith({ error: "Category should be an alphabetical string" });
+      expect(productModel.findByIdAndUpdate).not.toHaveBeenCalled();
+    });
+
+});
+
 
 describe("productFiltersController", () => {
   let req, res;
