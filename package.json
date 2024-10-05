@@ -10,7 +10,7 @@
     "client": "npm start --prefix ./client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "sonarqube": "sonarqube-scanner",
-    "test:frontend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.frontend.js --verbose",
+    "test:frontend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.frontend.js --verbose --coverage",
     "test:backend": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.backend.js --verbose --coverage",
     "test": "npm run test:backend && npm run test:frontend; npx playwright install && npx playwright test",
     "clear_jest": "jest --clearCache"
