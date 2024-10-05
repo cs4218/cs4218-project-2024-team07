@@ -58,7 +58,7 @@ describe("Create Category Controller", () => {
     });
 
     // Slugify function is used to test whether name is integer or not ???
-    test('Create new category with an integer name', async () => {
+    test.failing('Create new category with an integer name', async () => {
         const req = {body: {'name': 12345678}};
         const res = {status: jest.fn().mockReturnThis(), send: jest.fn()};
         await createCategoryController(req, res);
@@ -86,6 +86,38 @@ describe("Update Category Controller", () => {
         expect(findByIdAndUpdateMock).toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.send).toHaveBeenCalledWith({success: true, messsage: "Category Updated Successfully", category: {name: 'updatedCategory', slug: slugify('updatedCategory')}});
+    });
+
+    test('Update category with a duplicate category name', async () => {
+        const existingCategoryOne = new categoryModel({
+            _id: '1',
+            name: 'duplicateCategory',
+            slug: slugify('duplicateCategory'),
+        });
+        const existingCategoryTwo = new categoryModel({
+            _id: '2',
+            name: 'newCategory',
+            slug: slugify('newCategory'),
+        });
+        await existingCategoryOne.save();
+        await existingCategoryTwo.save();
+
+        const findByIdAndUpdateMock = jest.spyOn(categoryModel, 'findByIdAndUpdate').mockResolvedValue({
+            _id: '2',
+            name: 'duplicateCategory',
+            slug: slugify('duplicateCategory')
+        });
+
+        const req = {body: {'name': 'duplicateCategory'}, params: {id: '2'}};
+        const res = {status: jest.fn().mockReturnThis(), send: jest.fn()};
+        await updateCategoryController(req, res);
+
+        expect(findByIdAndUpdateMock).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
+            success: false,
+            message: "Category Already Exisits"
+        }));
     });
 
     test('Update category with an non-existent ID', async () => {

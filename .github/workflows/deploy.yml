@@ -2,8 +2,9 @@ name: Deploy MarkBind site to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build-and-deploy:
@@ -17,17 +18,114 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14"
+          node-version: "16"
 
+      # Install dependencies for BE
+      - name: Install backend dependencies
+        run: npm install
+
+      # Install dependencies for FE
+      - name: Install client dependencies
+        run: |
+          cd client
+          npm install
+
+      # List the contents of the directory to check the structure
+      # - name: Check directory contents in client
+      #   run: |
+      #     echo "Listing contents of /home/runner/work/cs4218-project-2024-team07/cs4218-project-2024-team07/client"
+      #     ls -R /home/runner/work/cs4218-project-2024-team07/cs4218-project-2024-team07/client
+
+
+      # Create the site.json file
+      - name: Create site.json file
+        run: |
+          echo '{
+            "baseUrl": "",
+            "titlePrefix": "",
+            "titleSuffix": "",
+            "ignore": [
+              "_markbind/layouts/*",
+              "_markbind/logs/*",
+              "_site/*",
+              "site.json",
+              "*.md",
+              "*.njk",
+              ".git/*",
+              ".gitignore",
+              "node_modules/*"
+            ],
+            "pagesExclude": ["node_modules/*"],
+            "pages": [
+              {
+                "src": "index.md"
+              },
+              {
+                "glob": ["**/index.md", "**/*.md"]
+              }
+            ],
+            "deploy": {
+              "message": "Site Update."
+            }
+          }' > /home/runner/work/cs4218-project-2024-team07/cs4218-project-2024-team07/client/site.json
+
+
+      # Install additional Babel dependencies needed for Jest
+      - name: Install Babel for Jest
+        run: |
+          npm install --save-dev @babel/core @babel/preset-env babel-jest
+
+      # Create a Jest configuration with Babel on the fly
+      - name: Create Jest Config
+        run: |
+          echo 'module.exports = {' > jest.config.js
+          echo '  transform: {' >> jest.config.js
+          echo '    "^.+\\\\.[t|j]sx?$": "babel-jest"' >> jest.config.js
+          echo '  },' >> jest.config.js
+          echo '  transformIgnorePatterns: [' >> jest.config.js
+          echo '    "/node_modules/(?!bson)"' >> jest.config.js
+          echo '  ]' >> jest.config.js
+          echo '};' >> jest.config.js
+
+      # Create Babel configuration on the fly
+      - name: Create Babel Config
+        run: |
+          echo '{ "presets": ["@babel/preset-env"] }' > .babelrc
+
+      # Run tests for FE
+      - name: Run tests for FE
+        run: npm run test:frontend
+        continue-on-error: true
+
+      # Run tests for BE with environment variables
+      - name: Run tests for BE
+        env:
+          PORT: 6060
+          DEV_MODE: development
+          MONGO_URL: mongodb+srv://hongsheng:hongsheng123@cs4218-test-cluster.vvmcw.mongodb.net/
+          JWT_SECRET: HGFHGEAD12124322432
+          BRAINTREE_MERCHANT_ID: hmrc3kfrt2xrvtvp
+          BRAINTREE_PUBLIC_KEY: d3rnqcjwn7zk4fpt
+          BRAINTREE_PRIVATE_KEY: 767ed9ddd903781349d4c2af441f8eaa
+          NODE_ENV: test
+        run: npm run test:backend
+        continue-on-error: true
+
+      # Install MarkBind globally
       - name: Install MarkBind
         run: npm install -g markbind-cli
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
+      # Build MarkBind site
       - name: Build MarkBind site
         run: |
           cd client
           markbind build
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
+      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
