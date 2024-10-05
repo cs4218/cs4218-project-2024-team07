@@ -95,11 +95,15 @@ describe('/register', () => {
   });
 
   // NOTE:
-  // Observation to be included in report: Due to the nature of pairwise testing, where (op1, op2) is tested concurrently
+  // Observation included in report: Due to the nature of pairwise testing, where (op1, op2) is tested concurrently
   // op1 and op2 share an AND relationship where as long as one of the op fails, the test itself fails. 
   // Also, for unit test, as per what we learnt, we treated the controller under test as a black box, therefore we are testing
   // for all tests related to authentication eg. extremely short password should give failure or phone number with letters
   // although the actual implementation of authController only takes into account the missing fields
+  // 
+  // A reason why it.failing is used is because there is an ongoing bug in the authController where the status code
+  // returned by the authController does not correctly identify the actual status of a response, possibly to be  reported as a bug.
+  
   // Test Case 2: Registration fails (Name and Email absent)
   it.failing('should fail when name and email are absent', async () => {
     const reqBody = {
