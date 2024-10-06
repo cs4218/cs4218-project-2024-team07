@@ -91,22 +91,22 @@ describe("Profile controller", () => {
       req = {
         user: { _id: "12345" },
         body: {
-          name: "139847",
+          name: "",
           email: "valid@example.com",
-          password: "",
-          phone: "elifhaoeid",
-          address: "123 Main St",
+          password: "123456",
+          phone: "1234567890",
+          address: "Just rightttttttttttttttttttttttttttttttttttttttttttttttttttttttttt address",
         },
       };
       findByIdAndUpdateMock = jest
         .spyOn(userModel, "findByIdAndUpdate")
         .mockRejectedValue({
           _id: "12345",
-          name: "139847",
+          name: "",
           email: "valid@example.com",
-          password: "",
-          phone: "elifhaoeid",
-          address: "123 Main St",
+          password: "123456",
+          phone: "1234567890",
+          address: "Just rightttttttttttttttttttttttttttttttttttttttttttttttttttttttttt address",
         });
       await updateProfileController(req, res);
 
@@ -122,36 +122,36 @@ describe("Profile controller", () => {
   );
 
   it.failing(
-    "should return 400 with invalid email: Pairwise test 2",
+    "should return 400 with invalid name: Pairwise test 2",
     async () => {
       req = {
         user: { _id: "12345" },
         body: {
-          name: "John Doe",
+          name: "139847",
           email: "$&#*@example.com",
-          password: "123456",
-          phone: "1234567890",
+          password: "1234567somepassword",
+          phone: "",
           address:
-            "Loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong address",
+            "123 Main St",
         },
       };
       findByIdAndUpdateMock = jest
         .spyOn(userModel, "findByIdAndUpdate")
         .mockRejectedValue({
           _id: "12345",
-          name: "John Doe",
+          name: "139847",
           email: "$&#*@example.com",
-          password: "123456",
-          phone: "1234567890",
+          password: "1234567somepassword",
+          phone: "",
           address:
-            "Loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong address",
+            "123 Main St",
         });
       await updateProfileController(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
         error: expect.stringMatching(
-          /Email is required, not empty and in proper format/i
+          /Name is required, not empty and only has alphabets and hyphens/i
         ),
       });
       // Assumption is that there should be more checks on
@@ -167,9 +167,9 @@ describe("Profile controller", () => {
         body: {
           name: "@#$%",
           email: "",
-          password: "123456",
-          phone: "@#$%",
-          address: "",
+          password: "123",
+          phone: "elifhaoeid",
+          address: "Just rightttttttttttttttttttttttttttttttttttttttttttttttttttttttttt address",
         },
       };
       findByIdAndUpdateMock = jest
@@ -178,9 +178,9 @@ describe("Profile controller", () => {
           _id: "12345",
           name: "@#$%",
           email: "",
-          password: "123456",
-          phone: "@#$%",
-          address: "",
+          password: "123",
+          phone: "elifhaoeid",
+          address: "Just rightttttttttttttttttttttttttttttttttttttttttttttttttttttttttt address",
         });
       await updateProfileController(req, res);
 
@@ -202,10 +202,10 @@ describe("Profile controller", () => {
         user: { _id: "12345" },
         body: {
           name: "John Doe",
-          email: "",
-          password: "123",
-          phone: "1234567890",
-          address: "123 Main St",
+          email: "13489",
+          password: "1234567somepassword",
+          phone: "@#$%",
+          address: "Loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong address",
         },
       };
       findByIdAndUpdateMock = jest
@@ -213,10 +213,10 @@ describe("Profile controller", () => {
         .mockRejectedValue({
           _id: "12345",
           name: "John Doe",
-          email: "",
-          password: "123",
-          phone: "1234567890",
-          address: "123 Main St",
+          email: "13489",
+          password: "1234567somepassword",
+          phone: "@#$%",
+          address: "Loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong address",
         });
       await updateProfileController(req, res);
 
@@ -232,16 +232,16 @@ describe("Profile controller", () => {
   );
 
   it.failing(
-    "should return 400 with invalid address: Pairwise test 5",
+    "should return 400 with invalid phone: Pairwise test 5",
     async () => {
       req = {
         user: { _id: "12345" },
         body: {
           name: "John Doe",
           email: "valid@example.com",
-          password: "1234567somepassword",
-          phone: "",
-          address: "",
+          password: "123456",
+          phone: "elifhaoeid",
+          address: "123 Main St",
         },
       };
       findByIdAndUpdateMock = jest
@@ -250,16 +250,16 @@ describe("Profile controller", () => {
           _id: "12345",
           name: "John Doe",
           email: "valid@example.com",
-          password: "1234567somepassword",
-          phone: "",
-          address: "",
+          password: "123456",
+          phone: "elifhaoeid",
+          address: "123 Main St",
         });
       await updateProfileController(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
         error: expect.stringMatching(
-          /Address is required, not empty and not more than 75 characters long/i
+          /Phone is required, not empty and in proper format/i
         ),
       });
       // Assumption is that there should be more checks on
