@@ -1,5 +1,5 @@
 // tests/header.spec.js
-const { test, it, expect } = require('@playwright/test');
+const { test, expect } = require('@playwright/test');
 
 test.describe('Header Component Tests', () => {
   test.beforeEach(async ({ page }) => {
