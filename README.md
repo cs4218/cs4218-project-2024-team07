@@ -17,3 +17,5 @@ In the repository of your team, tag the submitted commit with a tag name “ms1�
 1. Create a tag, e.g., git tag -a ms1 -m “Milestone 1”
 2. Push the created tag into the repository, e.g., git push origin ms1
 3. More details are in: http://git-scm.com/book/en/v2/Git-Basics-Tagging
+
+#### For Milestone 2, please also add a section to your repo's README that lists out the contribution made by each member, and the files edited by each member. 
