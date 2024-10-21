@@ -12,4 +12,4 @@ node_modules
 **/coverage
 
 # ignore jmeter outputs
-/jmeter/outputs/
+jmeter/outputs/
