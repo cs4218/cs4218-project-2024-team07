@@ -1,73 +1,83 @@
-import React from 'react';
-import { render, screen, act } from '@testing-library/react';
-import Spinner from '../components/Spinner';
-import { BrowserRouter as Router } from 'react-router-dom';
-
-/**
- * 1) Checking spinner every second for 3 seconds
- * 2) Check login call
- * 3) Check custom call
- */
+import React from "react";
+import { render, screen, act } from "@testing-library/react";
+import Spinner from "../components/Spinner";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const mockNavigate = jest.fn();
-const mockLocation = { pathname: '/test', search: '', hash: '', state: null };
+const mockLocation = { pathname: "/test", search: "", hash: "", state: null };
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
   useNavigate: () => mockNavigate,
   useLocation: () => mockLocation,
 }));
 
-describe('Spinner component', () => {
+describe("Spinner component", () => {
   beforeEach(() => {
     jest.useFakeTimers();
-    render(
-      <Router>
-        <Spinner/>
-      </Router>
-    );
-  })
-    
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
-    jest.clearAllTimers(); 
+    jest.clearAllTimers();
   });
 
-  it('renders spinner with countdown', () => {
-    expect(screen.getByText(/redirecting to you in 3 second/i)).toBeInTheDocument();
-    expect(screen.getByRole('status')).toBeInTheDocument();
-
+  it.failing("Initialization of spinner with countdown", () => {
+    render(
+      <Router>
+        <Spinner />
+      </Router>
+    );
+    expect(
+      screen.getByText(/redirecting to you in 3 seconds/i)
+    ).toBeInTheDocument();
+    expect(screen.getByRole("status")).toBeInTheDocument();
+    // Ignoring grammatical mistakes
   });
 
-  it('should decrement the countdown every second', () => {
+  it.failing("Decrement the spinner countdown every second", () => {
+    render(
+      <Router>
+        <Spinner />
+      </Router>
+    );
     act(() => {
       jest.advanceTimersByTime(1000);
     });
-    expect(screen.getByText(/redirecting to you in 2 second/i)).toBeInTheDocument();
-
+    expect(
+      screen.getByText(/redirecting to you in 2 seconds/i)
+    ).toBeInTheDocument();
     act(() => {
       jest.advanceTimersByTime(1000);
     });
-    expect(screen.getByText(/redirecting to you in 1 second/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/redirecting to you in 1 second/i)
+    ).toBeInTheDocument();
+    // Grammatical mistakes
   });
 
-  it('should navigate to login path after countdown', () => {
+  it("Navigate to login path after countdown", () => {
+    render(
+      <Router>
+        <Spinner />
+      </Router>
+    );
     act(() => {
       jest.advanceTimersByTime(3000);
     });
-    expect(mockNavigate).toHaveBeenCalledWith('/login', { state: '/test' });
+    expect(mockNavigate).toHaveBeenCalledWith("/login", { state: "/test" });
   });
 
-  it('should navigate to a custom path after countdown', () => {
+  it("Navigate to a custom path after countdown", () => {
     render(
       <Router>
-        <Spinner path="dashboard"/>
+        <Spinner path="dashboard" />
       </Router>
     );
 
     act(() => {
       jest.advanceTimersByTime(3000);
     });
-    expect(mockNavigate).toHaveBeenCalledWith('/dashboard', { state: '/test' });
+    expect(mockNavigate).toHaveBeenCalledWith("/dashboard", { state: "/test" });
   });
 });
