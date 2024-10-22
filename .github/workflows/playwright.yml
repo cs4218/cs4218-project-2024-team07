@@ -34,7 +34,7 @@ jobs:
 
       - name: Start up Client
         env:
-          REACT_APP_API: http://localhost:6060
+          PORT: 3000
         run: npm run client &
 
 
