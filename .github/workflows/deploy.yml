@@ -113,15 +113,6 @@ jobs:
       
 
       - name: Run playwright tests
-        env:
-          PORT: 6060
-          DEV_MODE: development
-          MONGO_URL: mongodb+srv://username:d3zZ2uuoiqobR3xf@cs4218-test-cluster.vvmcw.mongodb.net/ecommerce_database
-          JWT_SECRET: HGFHGEAD12124322432
-          BRAINTREE_MERCHANT_ID: hmrc3kfrt2xrvtvp
-          BRAINTREE_PUBLIC_KEY: d3rnqcjwn7zk4fpt
-          BRAINTREE_PRIVATE_KEY: 767ed9ddd903781349d4c2af441f8eaa
-          NODE_ENV: test
         run: npm run test:playwright
         continue-on-error: true
       
