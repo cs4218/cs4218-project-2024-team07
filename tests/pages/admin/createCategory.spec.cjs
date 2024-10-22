@@ -4,7 +4,6 @@ test.use({
   trace: 'on',
   launchOptions: {
     headless: true,
-    args: ['--no-sandbox'],
   },
 });
 
