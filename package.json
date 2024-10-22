@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
-    "client": "npm start --prefix ./client",
+    "client": "PORT=3000 npm start --prefix ./client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "sonarqube": "sonarqube-scanner",
     "test:frontend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.frontend.js --verbose --coverage",

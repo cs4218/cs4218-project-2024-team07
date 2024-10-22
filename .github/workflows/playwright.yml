@@ -32,12 +32,6 @@ jobs:
           cd client
           npm install
 
-      - name: Start up Client
-        env:
-          PORT: 3000
-        run: npm run client &
-
-
       - name: Start up Server
         env:
           PORT: 6060
@@ -48,6 +42,9 @@ jobs:
           BRAINTREE_PUBLIC_KEY: d3rnqcjwn7zk4fpt
           BRAINTREE_PRIVATE_KEY: 767ed9ddd903781349d4c2af441f8eaa
         run: npm run server &
+
+      - name: Start up Client
+        run: npm run client &
 
       # Install Playwright dependencies and browsers
       - name: Install Playwright dependencies
