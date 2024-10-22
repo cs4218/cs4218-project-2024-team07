@@ -3,7 +3,7 @@ const { test, expect } = require('@playwright/test');
 test.use({
   trace: 'on',
   launchOptions: {
-    headless: false,
+    headless: true,
     args: ['--no-sandbox'],
   },
 });
