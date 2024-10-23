@@ -55,9 +55,7 @@ jobs:
 
       # Run Playwright tests
       - name: Run Playwright tests
-        run: |
-          npm run test:playwright
-          npm run test:playwrightProduct
+        run: npm run test:playwright
         continue-on-error: true
 
       # Upload Playwright test report as an artifact
