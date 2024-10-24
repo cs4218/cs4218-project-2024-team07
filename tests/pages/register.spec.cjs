@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 
-const mongoURI = process.env.MONGO_URL.toString;
+const mongoURI = process.env.MONGO_URL.toString();
 
 async function getUserModel() {
   return await import('../../models/userModel.js'); 
