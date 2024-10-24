@@ -33,12 +33,11 @@ test.describe('Register Page Tests', () => {
   let uniqueEmail;
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:3000/register');
+    await page.goto('http://localhost:3000/register', {waitUntil: "commit"});
   });
 
   test('should register successfully with unique details', async ({ page }) => {
     uniqueEmail = `testregister${Date.now()}@gmail.com`;  
-    // Use date to create unique email for each test run, since race condition as only one db but multiple tests running concurrently
     
     await page.fill('input#exampleInputName1', 'John Doe');
     await page.fill('input#exampleInputEmail1', uniqueEmail); 

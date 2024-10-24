@@ -3,7 +3,7 @@ const { test, expect } = require('@playwright/test');
 test.describe('Login Page Tests', () => {
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:3000/login');
+    await page.goto('http://localhost:3000/login', {waitUntil: "commit"});
   });
   
   test('should log in with valid credentials', async ({ page }) => {

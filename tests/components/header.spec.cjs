@@ -4,7 +4,7 @@ const { test, expect } = require('@playwright/test');
 test.describe('Header Component Tests', () => {
   test.beforeEach(async ({ page }) => {
 
-    await page.goto('http://localhost:3000/');
+    await page.goto('http://localhost:3000/', {waitUntil: "commit"});
 
 
     await page.evaluate(() => localStorage.clear());
@@ -30,10 +30,9 @@ test.describe('Header Component Tests', () => {
     await categoriesDropdown.waitFor({ state: 'visible', timeout: 10000 }); 
   
 
-    await expect(categoriesDropdown.locator('a.dropdown-item')).toHaveText('All Categories');
+    await expect(categoriesDropdown.locator('a.dropdown-item').first()).toHaveText('All Categories');
   
-
-    await expect(categoriesDropdown.locator('a.dropdown-item')).toHaveAttribute('href', '/categories');
+    await expect(categoriesDropdown.locator('a.dropdown-item').first()).toHaveAttribute('href', '/categories');
   });
   
   
@@ -52,7 +51,7 @@ test.describe('Header Component Tests', () => {
     await page.evaluate(() => localStorage.clear());
 
 
-    await page.reload();
+    await page.reload({ waitUntil: 'commit' });
 
 
     await expect(page.locator('nav >> text="Login"')).toBeVisible();
@@ -73,7 +72,7 @@ test.describe('Header Component Tests', () => {
     });
 
 
-    await page.reload();
+    await page.reload({ waitUntil: 'commit' });
 
 
     await expect(page.locator('nav >> text="Test User"')).toBeVisible();
@@ -101,7 +100,7 @@ test.describe('Header Component Tests', () => {
         })
       );
     });
-    await page.reload();
+    await page.reload({ waitUntil: 'commit' });
 
     await page.click('nav >> text="Test User"');
     await page.click('.dropdown-menu >> text="Logout"');

@@ -4,7 +4,7 @@ test.describe('Page Not Found Tests', () => {
 
   test('should display 404 Page Not Found with Go Back button', async ({ page }) => {
 
-    await page.goto('http://localhost:3000/non-existent-page');  
+    await page.goto('http://localhost:3000/non-existent-page', {waitUntil: "commit"});  
 
     await page.waitForSelector('h1.pnf-title');
     
