@@ -7,11 +7,12 @@
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
-    "client": "npm start --prefix ./client",
+    "client": "PORT=3000 npm start --prefix ./client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "sonarqube": "sonarqube-scanner",
     "test:frontend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.frontend.js --verbose --coverage",
     "test:backend": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.backend.js --verbose --coverage",
+    "test:playwright": "npx playwright test tests/pages/admin/createCategory.spec.cjs",
     "test": "npm run test:backend && npm run test:frontend; npx playwright install && npx playwright test",
     "clear_jest": "jest --clearCache"
   },
@@ -19,6 +20,7 @@
   "author": "RP",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^9.0.3",
     "bcrypt": "^5.1.1",
     "braintree": "^3.22.0",
     "colors": "^1.4.0",
@@ -30,7 +32,7 @@
     "express-formidable": "^1.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.3.0",
-    "mongoose": "^8.1.2",
+    "mongoose": "^8.7.2",
     "morgan": "^1.10.0",
     "nodemon": "^3.0.3",
     "react-icons": "^5.0.1",
@@ -50,8 +52,8 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "mongodb-memory-server": "^10.1.2",
     "sonarqube-scanner": "^3.3.0",
-    "supertest": "^7.0.0",
-    "mongodb-memory-server": "^10.0.1"
+    "supertest": "^7.0.0"
   }
 }
