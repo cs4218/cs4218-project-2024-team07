@@ -31,14 +31,11 @@ test.describe("Profile component tests", () => {
   const phoneInputFieldPLaceholder = "Enter Your Phone";
   const addressInputFieldPlaceholder = "Enter Your Address";
 
-  const goToProfile = async (page, changes) => {
+  const goToProfile = async (page, isLoggedOut, changes) => {
     await page.goto("http://localhost:3000/", {
       waitUntil: "domcontentloaded",
     });
-    const loggedInElement = await page
-      .getByRole("link", { name: "Login" })
-      .isVisible();
-    if (loggedInElement) {
+    if (isLoggedOut) {
       await page.getByRole("link", { name: "Login" }).click();
       // Login
       await page
@@ -91,12 +88,12 @@ test.describe("Profile component tests", () => {
   };
 
   test.beforeEach(async ({ page }) => {
-    await goToProfile(page, userAccount);
+    await goToProfile(page, true, userAccount);
     // await changeProfileInfo(page, userAccount);
   });
 
   test.afterEach(async ({ page }) => {
-    await goToProfile(page, changes);
+    await goToProfile(page, false, changes);
     await changeProfileInfo(page, userAccount);
     changes = {};
   });
@@ -164,5 +161,20 @@ test.describe("Profile component tests", () => {
     await page.getByRole("button", { name: "LOGIN" }).click();
     // Login successful
     await expect(page).toHaveURL("http://localhost:3000");
+  });
+
+  test.fail("should have popup when profile is updated unsuccessfully", async ({
+    page,
+  }) => {
+    changes = {
+      password: 'fail',
+    };
+    await changeProfileInfo(page, changes);
+
+    // Profile Updated toast pops up successfully
+    const statusDiv = page
+      .locator('div[role="status"]')
+      .filter({ hasText: "Something went wrong" });
+    await expect(statusDiv).toHaveText("Something went wrong");
   });
 });
