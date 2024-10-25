@@ -84,6 +84,7 @@ beforeAll(async () => {
   const fakeProducts = await Promise.all(
     Array.from({ length: 10 }, async () => await createFakeProduct())
   );
+
   await Product.insertMany(fakeProducts);
 
   const loginResponse = await request(app).post("/api/v1/auth/login").send({
@@ -106,20 +107,20 @@ test("/update-product/:pid", async () => {
   const product = await Product.findOne({ name: productName });
   expect(product).toBeDefined();
 
-  const productData = new FormData();
-  productData.append("name", "Updated product name");
-  productData.append("description", product.description);
-  productData.append("price", product.price);
-  productData.append("quantity", product.quantity);
-  productData.append("category", product.category._id);
-  productData.append("photo", Buffer.from(faker.image.dataUri(200, 200), "base64"));
-
+  const productPhotoBuffer = Buffer.from(
+    faker.image.dataUri(200, 200).split(",")[1],
+    "base64"
+  );
   const response = await request(app)
     .put(`/api/v1/product/update-product/${product._id}`)
     .set("Authorization", token)
-    .send(productData);
+    .field("name", "Updated product name")
+    .field("description", product.description)
+    .field("price", product.price)
+    .field("quantity", product.quantity)
+    .field("category", product.category._id.toString())
+    .attach("photo", productPhotoBuffer, "photo.jpg");
 
-  console.log("RESPONSE", response);
   uniqueProductNames.delete(product.name);
   uniqueProductNames.add("Updated product name");
 
