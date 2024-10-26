@@ -180,4 +180,139 @@ describe('Authentication Routes Integration Tests', () => {
       expect(res.body.message).toBe("Email and password are required");
     });
   });
+
+  describe('POST /api/v1/auth/forgot-password', () => {
+    const user = {
+      name: 'Forgor User',
+      email: 'Iforgor@example.com',
+      password: 'oldPassword',
+      phone: '1234567890',
+      address: '123 Forgor Street',
+      answer: 'Forgor Answer',
+    }
+    const newPass = "newPassword";
+    beforeEach(async () => {
+      // Register a user to test login functionality
+      await request(app)
+        .post('/api/v1/auth/register')
+        .send(user);
+    });
+
+    it('should reset password successfully with correct email, answer and newPassword', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/forgot-password')
+        .send({
+          email: user.email,
+          answer: user.answer,
+          newPassword: newPass
+        })
+      
+      // Expecting these returns given that the forgot password request is successful
+      expect(res.status).toBe(200);
+      expect(res.body.message).toBe("Password Reset Successfully");
+
+      // Subsequent logins should use the new password
+      const check = await request(app)
+        .post('/api/v1/auth/login')
+        .send({
+          email: user.email,
+          password: newPass,
+        });
+      expect(check.status).toBe(200);
+      expect(check.body.message).toBe("login successfully");
+    })
+
+    it('should return 400 if email is missing', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/forgot-password')
+        .send({
+          answer: user.answer,
+          newPassword: newPass
+        })
+      
+      // Expecting these returns given that the forgot password request is unsuccessful
+      expect(res.status).toBe(400);
+      expect(res.body.message).toBe("Emai is required");
+
+      // Subsequent logins should use the original password
+      const check = await request(app)
+        .post('/api/v1/auth/login')
+        .send({
+          email: user.email,
+          password: user.password,
+        });
+      expect(check.status).toBe(200);
+      expect(check.body.message).toBe("login successfully");
+    })
+
+    it('should return 400 if answer is missing', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/forgot-password')
+        .send({
+          email: user.email,
+          newPassword: newPass
+        })
+      
+      // Expecting these returns given that the forgot password request is unsuccessful
+      expect(res.status).toBe(400);
+      expect(res.body.message).toBe("answer is required");
+
+      // Subsequent logins should use the original password
+      const check = await request(app)
+        .post('/api/v1/auth/login')
+        .send({
+          email: user.email,
+          password: user.password,
+        });
+      expect(check.status).toBe(200);
+      expect(check.body.message).toBe("login successfully");
+    })
+
+    it('should return 400 if newPassword is missing', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/forgot-password')
+        .send({
+          email: user.email,
+          answer: user.answer,
+        })
+      
+      // Expecting these returns given that the forgot password request is unsuccessful
+      expect(res.status).toBe(400);
+      expect(res.body.message).toBe("New Password is required");
+
+      // Subsequent logins should use the original password
+      const check = await request(app)
+        .post('/api/v1/auth/login')
+        .send({
+          email: user.email,
+          password: user.password,
+        });
+      expect(check.status).toBe(200);
+      expect(check.body.message).toBe("login successfully");
+    })
+
+    it('should return 404 if user is not found', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/forgot-password')
+        .send({
+          email: "Wot",
+          answer: user.answer,
+          newPassword: newPass,
+        })
+      
+      // Expecting these returns given that the forgot password request is unsuccessful
+      expect(res.status).toBe(404);
+      expect(res.body.message).toBe("Wrong Email Or Answer");
+
+      // Subsequent logins should use the original password
+      const check = await request(app)
+        .post('/api/v1/auth/login')
+        .send({
+          email: user.email,
+          password: user.password,
+        });
+      expect(check.status).toBe(200);
+      expect(check.body.message).toBe("login successfully");
+    })
+  })
 });
