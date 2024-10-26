@@ -47,8 +47,10 @@ Note that the files responsibilities and contributions below are only for MS2.
 - **db.js**: Implemented an in-memory MongoDB database for integration testing.
 
 ### Benjy
+
 #### UI Testing
 **CreateCategory.js**: User Flow: Login Page (Login with admin account) => CreateCategory.js (where modifications of category is made) => CategoryForm.js (where applicable) => Categories.js (where all the categories are displayed with their links) => CategoryProduct.js (where applicable)
+
 **Modified: createCategory.spec.cjs**
 - Create a category
 - Update a category
@@ -57,6 +59,7 @@ Note that the files responsibilities and contributions below are only for MS2.
 
 #### Integration Testing
 - **categoryRoutes.js**: Tested how categoryRoutes, categoryControllers, authMiddleware and MongoDB integrates with each other
+
 **Modified: categoryRoutes.test.js**
 - /create-category
 - /update-category/:id
