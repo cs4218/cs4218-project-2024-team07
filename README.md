@@ -83,3 +83,17 @@ Note that the files responsibilities and contributions below are only for MS2.
 - /search/:keyword
 
 ### Pei Geng
+
+#### UI Testing
+**Profile.js**: User Flow: Login Page -> Login to user account -> Dashboard -> Profile Page -> Edit Profile details
+
+**Modified: Profile.spec.cjs**
+- Update profile details successfully and get a confirmation toast
+- Update profile details successfully and see the changed details on dashboard
+- Update password successfully and now use a new password to login
+- Update profile details unsuccessfully and get a failure toast
+
+#### Integration Testing
+**authRoute.js**: Handled forgot password logic, performing integration test between the interaction of the backend with the database itself, and that consistent behavior is observed from the login controller logic
+
+**Modified: authRoute.test.js**:
