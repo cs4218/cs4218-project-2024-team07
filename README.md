@@ -34,13 +34,13 @@ Note that the files responsibilities and contributions below are only for MS2.
 ### File Responsibilities / Contributions
 
 #### UI testing
-- **login.spec.cjs**
-- **register.spec.cjs**
-- **pagenotfound.spec.cjs**
-- **header.spec.cjs**
+- **login.spec.cjs**: [User Flow: Navigate to Login Page => Log in with valid credentials (Verify redirection to Home Page) => Log in with invalid credentials (Check for error message) => Forgot Password Navigation (Verify navigation to Forgot Password page)]
+- **register.spec.cjs**: [User Flow: Navigate to Register Page => Register with unique details (Verify redirection to Login Page) => Register with already registered email (Check for error message) => Clean up by deleting test user account after each test].
+- **pagenotfound.spec.cjs**: [User Flow: Navigate to Non-Existent Page => Verify 404 error message and "Go Back" button => Click "Go Back" button (Verify redirection to Home Page)].
+- **header.spec.cjs**: [User Flow: Start at Home Page => Header (Logo and navigation links verification) => Categories Dropdown (Validate dropdown and links) => Cart Navigation (Check navigation to Cart page) => User Authentication Flow (Verify Login, Register, and User Dropdown based on authentication state) => Logout Flow (Ensure successful logout and redirection to Login page)]
 
 #### Integration testing
-- **authRoute.test.js**: Handled login and registration logic.
+- **authRoute.test.js**: Handled login and registration logic, performing integration test between the interaction of the backend with the database itself
 
 #### Miscellaneous
 - **server.js** + **.env**: Implemented dynamic port usage to prevent clashing ports during integration tests.
