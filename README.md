@@ -24,13 +24,6 @@ Note that the files responsibilities and contributions below are only for MS2.
 
 ## Hong Sheng
 
-### Product Management
-- Organized and facilitated team meetings.
-- Allocated tasks during meetings and ensured the team met important deadlines.
-- Detailed the action items after each team meeting and follow up in subsequent meetings.
-- Created and allocated product backlogs; managed sprint planning on **Trofos**.
-- Tagging and submission of MS deliverables.
-
 ### File Responsibilities / Contributions
 
 #### UI testing
