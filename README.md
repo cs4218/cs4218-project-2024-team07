@@ -59,4 +59,20 @@ In the repository of your team, tag the submitted commit with a tag name â€œms1â
 
 ### Eric
 
+#### UI Testing
+**createProduct.js/updateProduct.js**: User Flow: Login Page -> Login to admin account -> Dashboard -> Create Product/Products to update/delete existing products
+**Modified: createProduct.spec.cjs**
+- Create a product and submit successfully
+- Update a product successfully
+- Delete a product successfully
+
+#### Integration Testing: 
+**productRoutes.js**: Tested productRoutes, productControllers, mongoDB and authMiddleware and how they integrate with each other.
+**Modified: productRoutes.test.js for the following APIs**:
+- /update-product/:pid
+- /product-count
+- /product-list/:page
+- /product-filters
+- /search/:keyword
+
 ### Pei Geng
