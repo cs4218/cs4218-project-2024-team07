@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // I am aware that this is a security issue but we have no access to gh secrets...
-const mongoURI = process.env.MONGO_URL.toString || 'mongodb+srv://username:d3zZ2uuoiqobR3xf@cs4218-test-cluster.vvmcw.mongodb.net/ecommerce_database';
+const mongoURI = process.env.MONGO_URL|| 'mongodb+srv://username:d3zZ2uuoiqobR3xf@cs4218-test-cluster.vvmcw.mongodb.net/ecommerce_database';
 
 async function getUserModel() {
   return await import('../../models/userModel.js'); 
