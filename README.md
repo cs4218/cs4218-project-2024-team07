@@ -18,3 +18,45 @@ In the repository of your team, tag the submitted commit with a tag name “ms1�
 1. Create a tag, e.g., git tag -a ms1 -m “Milestone 1”
 2. Push the created tag into the repository, e.g., git push origin ms1
 3. More details are in: http://git-scm.com/book/en/v2/Git-Basics-Tagging
+
+## Team Member Contributions
+
+## Hong Sheng
+
+### Product Management
+- Organized and facilitated team meetings.
+- Allocated tasks during meetings and ensured the team met important deadlines.
+- Detailed the action items after each team meeting and follow up in subsequent meetings.
+- Created and allocated product backlogs; managed sprint planning on **Trofos**.
+- Tagging and submission of MS deliverables.
+
+### File Responsibilities / Contributions
+
+#### CI/CD
+- **deploy.yml**: CI/CD pipeline for MS1.
+
+#### Client
+- **Private.js**
+- **Header.js**
+- **auth.js**
+- **/Auth/**
+- **Pagenotfound.js**
+
+#### Backend
+- **authController.js**: Handled login and registration logic.
+- **authHelper.js**
+- **authRoutes.js**
+
+#### Miscellaneous
+- **server.js** + **.env**: Implemented dynamic port usage to prevent clashing ports during integration tests.
+- **db.js**: Implemented an in-memory MongoDB database for unit and integration testing.
+
+
+
+### Benjy
+
+### Samuel
+
+### Eric
+
+### Pei Geng

@@ -12,7 +12,7 @@
     "sonarqube": "sonarqube-scanner",
     "test:frontend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.frontend.js --verbose --coverage",
     "test:backend": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.backend.js --verbose --coverage",
-    "test:playwright": "npm run test:playwrightCategory ; npm run test:playwrightProduct",
+    "test:playwright": "npx playwright test tests/pages/login.spec.cjs && npx playwright test tests/pages/pagenotfound.spec.cjs && npx playwright test tests/pages/register.spec.cjs && npx playwright test tests/components/header.spec.cjs",
     "test:playwrightCategory": "npx playwright test tests/pages/admin/createCategory.spec.cjs",
     "test:playwrightProduct": "npx playwright test tests/pages/admin/createProduct.spec.cjs",
     "test": "npm run test:backend && npm run test:frontend; npx playwright install && npx playwright test",
