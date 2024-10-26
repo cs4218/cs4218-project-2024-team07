@@ -48,10 +48,21 @@ Note that the files responsibilities and contributions below are only for MS2.
 
 ### Benjy
 #### UI Testing
-- **CreateCategory.js**: Test the creation, update and deletion of category [User Flow: Login Page (Login with admin account) => CreateCategory.js (where modifications of category is made) => CategoryForm.js (where applicable) => Categories.js (where all the categories are displayed with their links) => CategoryProduct.js (where applicable)]
+**CreateCategory.js**: User Flow: Login Page (Login with admin account) => CreateCategory.js (where modifications of category is made) => CategoryForm.js (where applicable) => Categories.js (where all the categories are displayed with their links) => CategoryProduct.js (where applicable)
+**Modified: createCategory.spec.cjs**
+- Create a category
+- Update a category
+- Delete a category
+
 
 #### Integration Testing
-- **categoryRoutes.js**: Test how different components such as categoryRoutes, categoryControllers, authMiddleware and MongoDB integrates with each other
+- **categoryRoutes.js**: Tested how categoryRoutes, categoryControllers, authMiddleware and MongoDB integrates with each other
+**Modified: categoryRoutes.test.js**
+- /create-category
+- /update-category/:id
+- /get-category
+- /single-category/:slug
+- /delete-category/:id
 
 ### Samuel
 
