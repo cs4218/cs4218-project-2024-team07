@@ -103,7 +103,7 @@ afterAll(async () => {
 });
 
 // Test for Create Product
-it("/create-product", async () => {
+test("/create-product", async () => {
   const product = await createFakeProduct();
   expect(product).toBeDefined();
 
@@ -130,7 +130,7 @@ it("/create-product", async () => {
 });
 
 // Test for Get Products
-it('should get all products', async () => {
+test('/get-product', async () => {
   const response = await request(app).get('/api/v1/product/get-product');
 
   expect(response.statusCode).toBe(200);
@@ -139,7 +139,7 @@ it('should get all products', async () => {
 });
 
 // Test for Single Product
-it('should get a single product by slug', async () => {
+test('/get-product/:slug', async () => {
   const productName = uniqueProductNames.values().next().value;
   const product = await Product.findOne({ name: productName });
   expect(product).toBeDefined();
@@ -152,7 +152,7 @@ it('should get a single product by slug', async () => {
   expect(response.body.product).toHaveProperty('slug', slug);
 });
 
-it('should get products by category slug', async () => {
+test('/product-category/:slug', async () => {
   const categoryName = uniqueCategoryNames.values().next().value;
   const category = await Category.findOne({ name: categoryName });
   expect(category).toBeDefined();
@@ -169,7 +169,7 @@ it('should get products by category slug', async () => {
 });
 
 // Test for Delete Product
-it('should delete a product by product id', async () => {
+test('/delete-product/:pid', async () => {
   const productName = uniqueProductNames.values().next().value;
   const product = await Product.findOne({ name: productName });
   expect(product).toBeDefined();
