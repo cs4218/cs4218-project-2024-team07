@@ -58,6 +58,27 @@ In the repository of your team, tag the submitted commit with a tag name â€œms1â
 
 ### Samuel
 
+#### UI Testing
+**Contact.spec.cjs**: Ensure page is displayed correctly with all the relevant information
+
+**Search.spec.cjs**: Ensure search function works and displays corresponding information properly
+- Search When No Product Is Found
+- Search When Product Is Found
+- Click Product Details for Available Product (Expected to Fail)
+- Check "Add to Cart" Functionality for Available Product (Expected to Fail)
+
+
+#### Integration Testing
+- **productRoutes.js**: Tested productRoutes, productControllers, mongoDB and authMiddleware and how they integrate with each other.
+
+**Modified: productRoutes.test.js for the following APIs:**
+- /create-product
+- /get-product
+- /get-product/:slug
+- /product-category/:slug
+- /delete-product/:pid
+
+
 ### Eric
 
 ### Pei Geng
