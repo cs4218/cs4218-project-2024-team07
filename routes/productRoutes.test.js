@@ -57,7 +57,7 @@ async function createFakeProduct() {
   return {
     name: productName,
     slug: slugify(productName),
-    description: "product description",
+    description: "product description", 
     price: 10,
     category: category,
     quantity: 100,
@@ -101,6 +101,86 @@ afterAll(async () => {
   await mongoose.disconnect();
   await mongoServer.stop();
 });
+
+// Test for Create Product
+it("/create-product", async () => {
+  const product = await createFakeProduct();
+  expect(product).toBeDefined();
+
+  const productPhotoBuffer = Buffer.from(
+    faker.image.dataUri(200, 200).split(",")[1],
+    "base64"
+  );
+
+  const response = await request(app)
+    .post(`/api/v1/product/create-product`)
+    .set("Authorization", token)
+    .field("name", product.name)
+    .field("description", product.description)
+    .field("price", product.price)
+    .field("quantity", product.quantity)
+    .field("category", product.category._id.toString())
+    .attach("photo", productPhotoBuffer, "photo.jpg");
+  
+  uniqueProductNames.add(product.name);
+
+  expect(response.statusCode).toBe(201); // Adjust based on your controller's response
+  expect(response.body).toHaveProperty('success', true); // Check for a success response
+
+});
+
+// Test for Get Products
+it('should get all products', async () => {
+  const response = await request(app).get('/api/v1/product/get-product');
+
+  expect(response.statusCode).toBe(200);
+  expect(response.body).toHaveProperty('products'); // Adjust based on your response structure
+  expect(Array.isArray(response.body.products)).toBe(true);
+});
+
+// Test for Single Product
+it('should get a single product by slug', async () => {
+  const productName = uniqueProductNames.values().next().value;
+  const product = await Product.findOne({ name: productName });
+  expect(product).toBeDefined();
+
+  const slug = product.slug;
+  const response = await request(app).get(`/api/v1/product/get-product/${slug}`);
+  console.log('Response:', response);
+  expect(response.statusCode).toBe(200);
+  expect(response.body).toHaveProperty('product');
+  expect(response.body.product).toHaveProperty('slug', slug);
+});
+
+it('should get products by category slug', async () => {
+  const categoryName = uniqueCategoryNames.values().next().value;
+  const category = await Category.findOne({ name: categoryName });
+  expect(category).toBeDefined();
+
+  const slug = category.slug;
+  const response = await request(app).get(`/api/v1/product/product-category/${slug}`);
+
+  expect(response.statusCode).toBe(200);
+  expect(response.body).toHaveProperty('success', true);
+  expect(response.body).toHaveProperty('products');
+  expect(Array.isArray(response.body.products)).toBe(true);
+  expect(response.body.products.length).toBeGreaterThan(0); // Adjust if necessary based on your controller's response
+  expect(response.body.products[0].category._id.toString()).toBe(category._id.toString());
+});
+
+// Test for Delete Product
+it('should delete a product by product id', async () => {
+  const productName = uniqueProductNames.values().next().value;
+  const product = await Product.findOne({ name: productName });
+  expect(product).toBeDefined();
+
+  const response = await request(app).delete(`/api/v1/product/delete-product/${product._id}`);
+  uniqueProductNames.delete(product.name);
+
+  expect(response.statusCode).toBe(200);
+  expect(response.body).toHaveProperty('success', true); // Adjust based on your controller's response
+});
+
 
 test("/update-product/:pid", async () => {
   const productName = uniqueProductNames.values().next().value;
