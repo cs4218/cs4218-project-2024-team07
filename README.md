@@ -21,40 +21,45 @@ In the repository of your team, tag the submitted commit with a tag name â€œms1â
 
 #### For Milestone 2, please also add a section to your repo's README that lists out the contribution made by each member, and the files edited by each member. 
 ## Team Member Contributions
+Note that the files responsibilities and contributions below are only for MS2.
 
 ## Hong Sheng
 
-### Product Management
-- Organized and facilitated team meetings.
-- Allocated tasks during meetings and ensured the team met important deadlines.
-- Detailed the action items after each team meeting and follow up in subsequent meetings.
-- Created and allocated product backlogs; managed sprint planning on **Trofos**.
-- Tagging and submission of MS deliverables.
-
 ### File Responsibilities / Contributions
 
-#### CI/CD
-- **deploy.yml**: CI/CD pipeline for MS1.
+#### UI testing
+- **login.spec.cjs**: [User Flow: Navigate to Login Page => Log in with valid credentials (Verify redirection to Home Page) => Log in with invalid credentials (Check for error message) => Forgot Password Navigation (Verify navigation to Forgot Password page)]
+- **register.spec.cjs**: [User Flow: Navigate to Register Page => Register with unique details (Verify redirection to Login Page) => Register with already registered email (Check for error message) => Clean up by deleting test user account after each test].
+- **pagenotfound.spec.cjs**: [User Flow: Navigate to Non-Existent Page => Verify 404 error message and "Go Back" button => Click "Go Back" button (Verify redirection to Home Page)].
+- **header.spec.cjs**: [User Flow: Start at Home Page => Header (Logo and navigation links verification) => Categories Dropdown (Validate dropdown and links) => Cart Navigation (Check navigation to Cart page) => User Authentication Flow (Verify Login, Register, and User Dropdown based on authentication state) => Logout Flow (Ensure successful logout and redirection to Login page)]
 
-#### Client
-- **Private.js**
-- **Header.js**
-- **auth.js**
-- **/Auth/**
-- **Pagenotfound.js**
-
-#### Backend
-- **authController.js**: Handled login and registration logic.
-- **authHelper.js**
-- **authRoutes.js**
+#### Integration testing
+- **authRoute.test.js**: Handled login and registration logic, performing integration test between the interaction of the backend with the database itself
 
 #### Miscellaneous
 - **server.js** + **.env**: Implemented dynamic port usage to prevent clashing ports during integration tests.
-- **db.js**: Implemented an in-memory MongoDB database for unit and integration testing.
-
-
+- **db.js**: Implemented an in-memory MongoDB database for integration testing.
 
 ### Benjy
+
+#### UI Testing
+**CreateCategory.js**: User Flow: Login Page (Login with admin account) => CreateCategory.js (where modifications of category is made) => CategoryForm.js (where applicable) => Categories.js (where all the categories are displayed with their links) => CategoryProduct.js (where applicable)
+
+**Modified: createCategory.spec.cjs**
+- Create a category
+- Update a category
+- Delete a category
+
+
+#### Integration Testing
+- **categoryRoutes.js**: Tested how categoryRoutes, categoryControllers, authMiddleware and MongoDB integrates with each other
+
+**Modified: categoryRoutes.test.js**
+- /create-category
+- /update-category/:id
+- /get-category
+- /single-category/:slug
+- /delete-category/:id
 
 ### Samuel
 
@@ -81,4 +86,36 @@ In the repository of your team, tag the submitted commit with a tag name â€œms1â
 
 ### Eric
 
+#### UI Testing
+**createProduct.js/updateProduct.js**: User Flow: Login Page -> Login to admin account -> Dashboard -> Create Product/Products to update/delete existing products
+
+**Modified: createProduct.spec.cjs**
+- Create a product and submit successfully
+- Update a product successfully
+- Delete a product successfully
+
+#### Integration Testing: 
+**productRoutes.js**: Tested productRoutes, productControllers, mongoDB and authMiddleware and how they integrate with each other.
+
+**Modified: productRoutes.test.js for the following APIs**:
+- /update-product/:pid
+- /product-count
+- /product-list/:page
+- /product-filters
+- /search/:keyword
+
 ### Pei Geng
+
+#### UI Testing
+**Profile.js**: User Flow: Login Page -> Login to user account -> Dashboard -> Profile Page -> Edit Profile details
+
+**Modified: Profile.spec.cjs**
+- Update profile details successfully and get a confirmation toast
+- Update profile details successfully and see the changed details on dashboard
+- Update password successfully and now use a new password to login
+- Update profile details unsuccessfully and get a failure toast
+
+#### Integration Testing
+**authRoute.js**: Handled forgot password logic, performing integration test between the interaction of the backend with the database itself, and that consistent behavior is observed from the login controller logic
+
+**Modified: authRoute.test.js**:
