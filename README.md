@@ -19,6 +19,7 @@ In the repository of your team, tag the submitted commit with a tag name â€œms1â
 2. Push the created tag into the repository, e.g., git push origin ms1
 3. More details are in: http://git-scm.com/book/en/v2/Git-Basics-Tagging
 
+#### For Milestone 2, please also add a section to your repo's README that lists out the contribution made by each member, and the files edited by each member. 
 ## Team Member Contributions
 Note that the files responsibilities and contributions below are only for MS2.
 
@@ -61,6 +62,27 @@ Note that the files responsibilities and contributions below are only for MS2.
 - /delete-category/:id
 
 ### Samuel
+
+#### UI Testing
+**Contact.spec.cjs**: Ensure page is displayed correctly with all the relevant information
+
+**Search.spec.cjs**: Ensure search function works and displays corresponding information properly
+- Search When No Product Is Found
+- Search When Product Is Found
+- Click Product Details for Available Product (Expected to Fail)
+- Check "Add to Cart" Functionality for Available Product (Expected to Fail)
+
+
+#### Integration Testing
+- **productRoutes.js**: Tested productRoutes, productControllers, mongoDB and authMiddleware and how they integrate with each other.
+
+**Modified: productRoutes.test.js for the following APIs:**
+- /create-product
+- /get-product
+- /get-product/:slug
+- /product-category/:slug
+- /delete-product/:pid
+
 
 ### Eric
 

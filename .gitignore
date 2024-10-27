@@ -5,6 +5,7 @@ node_modules
 /playwright/.cache/
 **/.env
 /package-lock.json
+jmeter/outputs/
 
 # ignore sonar scanner
 **/sonar-project.properties
