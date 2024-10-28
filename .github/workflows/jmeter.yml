@@ -60,7 +60,7 @@ jobs:
 
       # Upload JMeter Results
       - name: Upload JMeter Results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: jmeter-results
           path: jmeter/outputs/*.csv
