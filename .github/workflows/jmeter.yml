@@ -1,0 +1,76 @@
+name: Run jmeter tests
+
+on:
+  push:
+    branches:
+      - main
+      - jmeter
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  jmeter-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - uses: actions/checkout@v2
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      # Install dependencies for BE
+      - name: Install backend dependencies
+        run: npm install
+
+      # Install dependencies for FE
+      - name: Install client dependencies
+        run: |
+          cd client
+          npm install
+
+      # Install JMeter
+      - name: Install JMeter
+        run: |
+          wget -q https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.5.tgz
+          tar -xzf apache-jmeter-5.5.tgz
+          echo $GITHUB_WORKSPACE/apache-jmeter-5.5/bin >> $GITHUB_PATH
+
+      - name: Start up Server
+        env:
+          PORT: 6060
+          DEV_MODE: development
+          MONGO_URL: mongodb+srv://username:d3zZ2uuoiqobR3xf@cs4218-test-cluster.vvmcw.mongodb.net/ecommerce_database
+          JWT_SECRET: HGFHGEAD12124322432
+          BRAINTREE_MERCHANT_ID: hmrc3kfrt2xrvtvp
+          BRAINTREE_PUBLIC_KEY: d3rnqcjwn7zk4fpt
+          BRAINTREE_PRIVATE_KEY: 767ed9ddd903781349d4c2af441f8eaa
+        run: npm run server &
+
+      - name: Start up Client
+        run: npm run client &
+
+      # Run JMeter tests
+      - name: Run JMeter Tests
+        run: npm run test:jmeter
+
+      # Upload JMeter Results
+      - name: Upload JMeter Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: jmeter-results
+          path: jmeter/outputs/*.csv
+
+      - name: Install Latency Lingo CLI
+        run: |
+          curl -L https://github.com/latency-lingo/cli/releases/latest/download/latency-lingo-cli_linux_amd64.tar.gz | tar -xz
+          chmod +x latency-lingo-cli
+          echo $GITHUB_WORKSPACE >> $GITHUB_PATH
+
+      - name: Analyze Results with Latency Lingo
+        run: npm run test:latency-lingo
+            

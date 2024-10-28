@@ -11,3 +11,6 @@ jmeter/outputs/
 **/sonar-project.properties
 
 **/coverage
+
+# ignore jmeter outputs
+jmeter/outputs/
