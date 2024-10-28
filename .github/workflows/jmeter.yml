@@ -73,7 +73,12 @@ jobs:
     #       file: jmeter/outputs/*.csv
     #       label: Automated JMeter Test Results
     #       format: jmeter
-
+      # Download and Install Latency Lingo CLI
+      - name: Install Latency Lingo CLI
+        run: |
+          curl -L https://github.com/latency-lingo/cli/releases/latest/download/latency-lingo-cli_linux_amd64.tar.gz | tar -xz
+          chmod +x latency-lingo-cli
+    
       - name: Analyze Results with Latency Lingo
         run: |
             # Make sure the CLI is executable
