@@ -14,7 +14,7 @@
     "test:backend": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.backend.js --verbose --coverage",
     "test": "npm run test:backend && npm run test:frontend; npx playwright install && npx playwright test",
     "test:jmeter-old": "for script in jmeter/scripts/*.sh; do bash \"$script\"; done",
-    "test:jmeter": "jmeter/run_jmeter_tests.sh",
+    "test:jmeter": "chmod +x jmeter/run_jmeter_tests.sh && jmeter/run_jmeter_tests.sh",
     "clear_jest": "jest --clearCache"
   },
   "keywords": [],
