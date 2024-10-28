@@ -65,11 +65,11 @@ jobs:
           name: jmeter-results
           path: jmeter/outputs/*.csv
 
-    #   # Analyze JMeter Results
-    #   - name: Analyze Results with Latency Lingo
-    #     uses: latency-lingo/github-action@v0.0.2
-    #     with:
-    #       api-key: ${{ secrets.LATENCY_LINGO_API_KEY }}
-    #       file: jmeter/outputs/*.csv
-    #       label: Automated JMeter Test Results
-    #       format: jmeter
+      # Analyze JMeter Results
+      - name: Analyze Results with Latency Lingo
+        uses: latency-lingo/github-action@v0.0.2
+        with:
+          api-key: e13d313f-efb0-41cf-af3a-ae45dce3060f
+          file: jmeter/outputs/*.csv
+          label: Automated JMeter Test Results
+          format: jmeter
