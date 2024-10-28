@@ -22,7 +22,9 @@ In the repository of your team, tag the submitted commit with a tag name â€œms1â
 
 # Quick Guide on jmeter
 1. Download jmeter from the website. Follow instructions there to save file into desired location
-2. Create a test plan. If you don't want to create, a test plan has been created and saved into the jmeter folder
-3. Run the initial_load_test.sh file. It includes the shell command needed to run the initial_load_test.JMX test-plan under the test plan folder. Note you need jmeter and access to mongo db to run this. 
-4. What is initial_load_test.JMX? It is a test configuration file which uses HTTP Get Requests to access the frontend sites and the backend apis. If initial_load_test.sh doesn't work try initial_load_test_debug.sh
-5. After running the test results should appear in the outputs folder.
+2. Create a test plan. Add it to the jmeter/test-plans folder
+3. Run `npm run test:jmeter` which will run the `jmeter/run_jmeter_tests.sh` which runs the test-plans
+4. The output will appear in the jmeter/outputs folder
+
+### Extra information
+What is initial_load_test.JMX? It is a test configuration file which uses HTTP Get Requests to access the frontend sites and the backend apis.
