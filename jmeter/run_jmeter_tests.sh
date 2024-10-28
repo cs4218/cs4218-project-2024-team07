@@ -15,7 +15,13 @@ for jmx_file in ./jmeter/test-plans/*.jmx; do
         -j "$log_file" \
         -f -l "$result_file"
         
-    echo "Completed: $jmx_file"
-    echo "Log saved to: $log_file"
-    echo "Results saved to: $result_file"
+    # Check if the JMeter command was successful
+    if [ $? -eq 0 ]; then
+        echo "Completed: $jmx_file"
+        echo "Log saved to: $log_file"
+        echo "Results saved to: $result_file"
+    else
+        echo "Error running JMeter test: $jmx_file"
+        exit 1
+    fi
 done
