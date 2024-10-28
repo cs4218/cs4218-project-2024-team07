@@ -21,7 +21,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: "16"
 
       # Install dependencies for BE
       - name: Install backend dependencies
@@ -66,10 +66,25 @@ jobs:
           path: jmeter/outputs/*.csv
 
       # Analyze JMeter Results
+    #   - name: Analyze Results with Latency Lingo
+    #     uses: latency-lingo/github-action@v0.0.2
+    #     with:
+    #       api-key: e13d313f-efb0-41cf-af3a-ae45dce3060f
+    #       file: jmeter/outputs/*.csv
+    #       label: Automated JMeter Test Results
+    #       format: jmeter
+
       - name: Analyze Results with Latency Lingo
-        uses: latency-lingo/github-action@v0.0.2
-        with:
-          api-key: e13d313f-efb0-41cf-af3a-ae45dce3060f
-          file: jmeter/outputs/*.csv
-          label: Automated JMeter Test Results
-          format: jmeter
+        run: |
+            # Make sure the CLI is executable
+            chmod +x ./latency-lingo-cli
+
+            # Iterate over each CSV file in the outputs folder
+            for file in jmeter/outputs/*.csv; do
+            echo "Processing $file with Latency Lingo"
+            ./latency-lingo-cli publish --file "$file" \
+                --api-key "e13d313f-efb0-41cf-af3a-ae45dce3060f" \
+                --label "Automated JMeter Test Results" \
+                --format "jmeter" \
+                --env "production" || exit 1
+            done
