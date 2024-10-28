@@ -78,18 +78,8 @@ jobs:
         run: |
           curl -L https://github.com/latency-lingo/cli/releases/latest/download/latency-lingo-cli_linux_amd64.tar.gz | tar -xz
           chmod +x latency-lingo-cli
-    
-      - name: Analyze Results with Latency Lingo
-        run: |
-            # Make sure the CLI is executable
-            chmod +x ./latency-lingo-cli
+          export PATH=$PATH:$(pwd)
 
-            # Iterate over each CSV file in the outputs folder
-            for file in jmeter/outputs/*.csv; do
-            echo "Processing $file with Latency Lingo"
-            ./latency-lingo-cli publish --file "$file" \
-                --api-key "e13d313f-efb0-41cf-af3a-ae45dce3060f" \
-                --label "Automated JMeter Test Results" \
-                --format "jmeter" \
-                --env "production" || exit 1
-            done
+      - name: Analyze Results with Latency Lingo
+        run: npm run test:latency-lingo
+            

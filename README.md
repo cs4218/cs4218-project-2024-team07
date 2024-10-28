@@ -1,30 +1,28 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/Lq2be5ao)
-# Instructions on creating team repository using GitHub Classroom
-## Step 1. Ensure that your team formation through Canvas has been confirmed.
-Do not proceed to step 2 otherwise!
+# Latency Lingo CLI
 
-## Step 2. Visit the assignment link at https://classroom.github.com/a/Lq2be5ao
-The first member of the team to access this link will be prompted to accept the assignment that gives your team access to the new repository.
-Create a new team by typing 2024-TeamXX , where XX is the Team number as noted in Step 1 above. 
-(Note that the naming convention must be followed strictly, e.g. capitalisation, dash, and spacing. 
-If your group number is a single digit, i.e 2024-Team1 is fine as well.)
+[Latency Lingo](https://latencylingo.com) is helps software team analyze and collaborate on performance test result data.
 
-The other members in the team will be able to see an existing team with your team number in the “Join an existing team” section. Click Join.
+![](assets/logo_full.png)
 
-## Step 3. All of you should be able to see the acceptance page. Click on the assignment link to see the project on GitHub.
+This CLI is the main method to publish test metrics from your load test runner to Latency Lingo APIs. JMeter and Gatling are currently supported with Locust and k6 formats planned.
 
-# Milestone Submission Instructions
-In the repository of your team, tag the submitted commit with a tag name “ms1” (meaning milestone 1). 
-1. Create a tag, e.g., git tag -a ms1 -m “Milestone 1”
-2. Push the created tag into the repository, e.g., git push origin ms1
-3. More details are in: http://git-scm.com/book/en/v2/Git-Basics-Tagging
+## Usage
 
+Please see the [documentation site](https://docs.latencylingo.com/docs/getting-started) for installation and usage.
 
-# Quick Guide on jmeter
-1. Download jmeter from the website. Follow instructions there to save file into desired location
-2. Create a test plan. Add it to the jmeter/test-plans folder
-3. Run `npm run test:jmeter` which will run the `jmeter/run_jmeter_tests.sh` which runs the test-plans
-4. The output will appear in the jmeter/outputs folder
+## Examples
 
-### Extra information
-What is initial_load_test.JMX? It is a test configuration file which uses HTTP Get Requests to access the frontend sites and the backend apis.
+```sh
+latency-lingo-cli publish \
+  --file ./test_results_jmeter.jtl \
+  --label "checkout flow"
+  --api-key 05b6c656-006b-4107-991d-96a5a2a3227c
+```
+
+```sh
+latency-lingo-cli publish \
+  --file ./test_results_gatling.log \
+  --label "checkout flow - gatling test"
+  --api-key 05b6c656-006b-4107-991d-96a5a2a3227c
+  --format gatling
+```
