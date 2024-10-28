@@ -16,6 +16,7 @@
     "test:jmeter-old": "for script in jmeter/scripts/*.sh; do bash \"$script\"; done",
     "test:jmeter": "chmod +x jmeter/run_jmeter_tests.sh && jmeter/run_jmeter_tests.sh",
     "test:latency-lingo": "chmod +x jmeter/run_latency_lingo.sh && jmeter/run_latency_lingo.sh",
+    "test:jmeter-latency-lingo": "npm run test:jmeter && npm run test:latency-lingo",
     "clear_jest": "jest --clearCache"
   },
   "keywords": [],
