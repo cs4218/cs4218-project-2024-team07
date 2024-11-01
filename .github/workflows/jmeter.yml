@@ -36,18 +36,18 @@ jobs:
       # Install JMeter
       - name: Install JMeter
         run: |
-          wget -q https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.5.tgz
+          wget -q https://jmeter-plugins.org/get/ -O apache-jmeter-5.5/lib/ext/jmeter-plugins-manager.jar
           tar -xzf apache-jmeter-5.5.tgz
           echo $GITHUB_WORKSPACE/apache-jmeter-5.5/bin >> $GITHUB_PATH
           
       - name: Install JMeter Plugins
         run: |
           wget -q https://jmeter-plugins.org/get/ -O jmeter/lib/ext/jmeter-plugins-manager.jar
-          java -cp jmeter/lib/ext/jmeter-plugins-manager.jar org.jmeterplugins.repository.PluginManagerCMDInstaller
+          java -cp apache-jmeter-5.5/lib/ext/jmeter-plugins-manager.jar org.jmeterplugins.repository.PluginManagerCMDInstaller
 
       - name: Install UltimateThreadGroup Plugin
         run: |
-          jmeter/bin/jmeter -Jjmeter.home=./jmeter -cp jmeter/lib/ext/jmeter-plugins-manager.jar \
+          jmeter -cp apache-jmeter-5.5/lib/ext/jmeter-plugins-manager.jar \
           org.jmeterplugins.repository.PluginManagerCMD install jpgc-casutg
 
       - name: Start up Server
