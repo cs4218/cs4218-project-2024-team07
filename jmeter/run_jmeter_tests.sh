@@ -1,16 +1,5 @@
 #!/bin/bash
 
-if [ ! -f ./jmeter/lib/ext/jmeter-plugins-manager.jar ]; then
-    echo "Installing JMeter Plugins Manager..."
-    curl -L -o ./jmeter/lib/ext/jmeter-plugins-manager.jar https://jmeter-plugins.org/get/
-    java -cp ./jmeter/lib/ext/jmeter-plugins-manager.jar org.jmeterplugins.repository.PluginManagerCMDInstaller
-fi
-
-# Install UltimateThreadGroup plugin
-echo "Installing UltimateThreadGroup plugin..."
-java -cp ./jmeter/lib/ext/jmeter-plugins-manager.jar org.jmeterplugins.repository.PluginManagerCMD install jpgc-casutg
-
-
 # Loop through all .jmx files in the test-plans directory
 for jmx_file in ./jmeter/test-plans/*.jmx; do
     # Extract the base name of the jmx file without the path and extension
