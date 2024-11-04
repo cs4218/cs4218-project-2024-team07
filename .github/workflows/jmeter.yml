@@ -40,15 +40,11 @@ jobs:
           tar -xzf apache-jmeter-5.5.tgz
           echo $GITHUB_WORKSPACE/apache-jmeter-5.5/bin >> $GITHUB_PATH
           
-      - name: Install JMeter Plugins
+      - name: Install JMeter dependencies
         run: |
-          wget -q https://jmeter-plugins.org/get/ -O $GITHUB_WORKSPACE/apache-jmeter-5.5/lib/ext/jmeter-plugins-manager.jar
-          java -cp $GITHUB_WORKSPACE/apache-jmeter-5.5/lib/ext/jmeter-plugins-manager.jar org.jmeterplugins.repository.PluginManagerCMDInstaller
-
-      - name: Install UltimateThreadGroup Plugin
-        run: |
-          jmeter -cp $GITHUB_WORKSPACE/apache-jmeter-5.5/lib/ext/jmeter-plugins-manager.jar \
-          org.jmeterplugins.repository.PluginManagerCMD install jpgc-casutg
+          cd $GITHUB_WORKSPACE/apache-jmeter-5.5/lib && curl -O https://repo1.maven.org/maven2/kg/apc/cmdrunner/2.2.1/cmdrunner-2.2.1.jar
+          cd $GITHUB_WORKSPACE/apache-jmeter-5.5/lib/ext && curl -O https://repo1.maven.org/maven2/kg/apc/jmeter-plugins-manager/1.6/jmeter-plugins-manager-1.6.jar
+          cd $GITHUB_WORKSPACE/apache-jmeter-5.5/lib && java -jar cmdrunner-2.2.1.jar --tool org.jmeterplugins.repository.PluginManagerCMD install jpgc-synthesis,jpgc-graphs-basic,jpgc-graphs-additional,jpgc-cmd,jpgc-graphs-dist,jpgc-standard,jpgc-casutg
 
       - name: Start up Server
         env:
