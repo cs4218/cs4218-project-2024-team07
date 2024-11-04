@@ -14,3 +14,5 @@ jmeter/outputs/
 
 # ignore jmeter outputs
 jmeter/outputs/
+jmeter.log
+**/.DS_Store
