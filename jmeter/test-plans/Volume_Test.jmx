@@ -314,7 +314,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Volume: 500kb image">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Volume: 500kb image" enabled="true">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">6060</stringProp>
           <stringProp name="HTTPSampler.path">/api/v1/product/create-product</stringProp>
@@ -393,7 +393,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="(1mb onwards fails...) Volume: 1mb image">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="(1mb onwards fails...) Volume: 1mb image" enabled="true">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">6060</stringProp>
           <stringProp name="HTTPSampler.path">/api/v1/product/create-product</stringProp>
