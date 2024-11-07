@@ -6,6 +6,8 @@
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
         <collectionProp name="Arguments.arguments"/>
       </elementProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
     </TestPlan>
     <hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group">
@@ -24,7 +26,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="User Enters landing page">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="User Enters landing page" enabled="true">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">3000</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
@@ -36,7 +38,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="User attempts to login">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="User attempts to login" enabled="true">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">6060</stringProp>
           <stringProp name="HTTPSampler.path">/api/v1/auth/login</stringProp>
@@ -59,7 +61,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -68,7 +70,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Session Token Extractor">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Session Token Extractor" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">token</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$..token</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -84,9 +86,9 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
             <collectionProp name="HTTPFileArgs.files">
-              <elementProp name="C:\Users\emoGu\OneDrive\Pictures\vsmall-50-kb-jpg.jpg" elementType="HTTPFileArg">
+              <elementProp name="../assets/vsmall-50-kb-jpg.jpg" elementType="HTTPFileArg">
                 <stringProp name="File.mimetype">image/jpeg</stringProp>
-                <stringProp name="File.path">C:\Users\emoGu\OneDrive\Pictures\vsmall-50-kb-jpg.jpg</stringProp>
+                <stringProp name="File.path">../assets/vsmall-50-kb-jpg.jpg</stringProp>
                 <stringProp name="File.paramname">photo</stringProp>
               </elementProp>
             </collectionProp>
@@ -140,7 +142,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
@@ -163,9 +165,9 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
             <collectionProp name="HTTPFileArgs.files">
-              <elementProp name="C:\Users\emoGu\OneDrive\Pictures\vsmall-100-kb-jpg.jpg" elementType="HTTPFileArg">
+              <elementProp name="../assets/vsmall-100-kb-jpg.jpg" elementType="HTTPFileArg">
                 <stringProp name="File.mimetype">image/jpeg</stringProp>
-                <stringProp name="File.path">C:\Users\emoGu\OneDrive\Pictures\vsmall-100-kb-jpg.jpg</stringProp>
+                <stringProp name="File.path">../assets/vsmall-100-kb-jpg.jpg</stringProp>
                 <stringProp name="File.paramname">photo</stringProp>
               </elementProp>
             </collectionProp>
@@ -219,7 +221,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
@@ -242,9 +244,9 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
             <collectionProp name="HTTPFileArgs.files">
-              <elementProp name="C:\Users\emoGu\OneDrive\Pictures\vsmall-200-kb-jpg.jpg" elementType="HTTPFileArg">
+              <elementProp name="../assets/vsmall-200-kb-jpg.jpg" elementType="HTTPFileArg">
                 <stringProp name="File.mimetype">image/jpeg</stringProp>
-                <stringProp name="File.path">C:\Users\emoGu\OneDrive\Pictures\vsmall-200-kb-jpg.jpg</stringProp>
+                <stringProp name="File.path">../assets/vsmall-200-kb-jpg.jpg</stringProp>
                 <stringProp name="File.paramname">photo</stringProp>
               </elementProp>
             </collectionProp>
@@ -298,7 +300,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
@@ -321,9 +323,9 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
             <collectionProp name="HTTPFileArgs.files">
-              <elementProp name="C:\Users\emoGu\OneDrive\Pictures\vsmall-500-kb-jpg.jpg" elementType="HTTPFileArg">
+              <elementProp name="../assets/vsmall-500-kb-jpg.jpg" elementType="HTTPFileArg">
                 <stringProp name="File.mimetype">image/jpeg</stringProp>
-                <stringProp name="File.path">C:\Users\emoGu\OneDrive\Pictures\vsmall-500-kb-jpg.jpg</stringProp>
+                <stringProp name="File.path">../assets/vsmall-500-kb-jpg.jpg</stringProp>
                 <stringProp name="File.paramname">photo</stringProp>
               </elementProp>
             </collectionProp>
@@ -377,7 +379,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
@@ -456,7 +458,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
@@ -535,7 +537,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
@@ -614,7 +616,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
@@ -693,7 +695,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
@@ -772,7 +774,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
@@ -851,7 +853,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
@@ -865,11 +867,11 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer">
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
           <stringProp name="ConstantTimer.delay">1000</stringProp>
         </ConstantTimer>
         <hashTree/>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -907,7 +909,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="tearDown Thread Group">
+      <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="tearDown Thread Group" enabled="true">
         <stringProp name="TestPlan.comments">I&apos;ve added a new api route to Remove data from mongodb used for volume test</stringProp>
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
@@ -919,9 +921,9 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
         </elementProp>
       </PostThreadGroup>
       <hashTree>
-        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Once Only Controller"/>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Once Only Controller" enabled="true"/>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Del JMETER objects">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Del JMETER objects" enabled="true">
             <stringProp name="HTTPSampler.domain">localhost</stringProp>
             <stringProp name="HTTPSampler.port">6060</stringProp>
             <stringProp name="HTTPSampler.path">/api/v1/jmeter-del/mongo-delete</stringProp>
@@ -935,7 +937,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </HTTPSamplerProxy>
           <hashTree/>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
