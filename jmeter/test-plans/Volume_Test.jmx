@@ -77,7 +77,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Volume: 50kb image">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Volume: 50kb image" enabled="true">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">6060</stringProp>
           <stringProp name="HTTPSampler.path">/api/v1/product/create-product</stringProp>
@@ -156,7 +156,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Volume: 100kb image">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Volume: 100kb image" enabled="true">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">6060</stringProp>
           <stringProp name="HTTPSampler.path">/api/v1/product/create-product</stringProp>
@@ -235,7 +235,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Volume: 200kb image">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Volume: 200kb image" enabled="true">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">6060</stringProp>
           <stringProp name="HTTPSampler.path">/api/v1/product/create-product</stringProp>
@@ -393,7 +393,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="(1mb fails... so I disabled from here on) Volume: 1mb image" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="(1mb onwards fails...) Volume: 1mb image">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">6060</stringProp>
           <stringProp name="HTTPSampler.path">/api/v1/product/create-product</stringProp>
@@ -402,9 +402,9 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
             <collectionProp name="HTTPFileArgs.files">
-              <elementProp name="C:\Users\emoGu\OneDrive\Pictures\sm-1-mb-jpg.jpg" elementType="HTTPFileArg">
+              <elementProp name="../assets/sm-1-mb-jpg.jpg" elementType="HTTPFileArg">
                 <stringProp name="File.mimetype">image/jpeg</stringProp>
-                <stringProp name="File.path">C:\Users\emoGu\OneDrive\Pictures\sm-1-mb-jpg.jpg</stringProp>
+                <stringProp name="File.path">../assets/sm-1-mb-jpg.jpg</stringProp>
                 <stringProp name="File.paramname">photo</stringProp>
               </elementProp>
             </collectionProp>
@@ -472,7 +472,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Volume: 5mb image" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Volume: 5mb image">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">6060</stringProp>
           <stringProp name="HTTPSampler.path">/api/v1/product/create-product</stringProp>
@@ -481,9 +481,9 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
             <collectionProp name="HTTPFileArgs.files">
-              <elementProp name="C:\Users\emoGu\OneDrive\Pictures\med-5-mb-jpg.jpg" elementType="HTTPFileArg">
+              <elementProp name="../assets/med-5-mb-jpg.jpg" elementType="HTTPFileArg">
                 <stringProp name="File.mimetype">image/jpeg</stringProp>
-                <stringProp name="File.path">C:\Users\emoGu\OneDrive\Pictures\med-5-mb-jpg.jpg</stringProp>
+                <stringProp name="File.path">../assets/med-5-mb-jpg.jpg</stringProp>
                 <stringProp name="File.paramname">photo</stringProp>
               </elementProp>
             </collectionProp>
@@ -551,7 +551,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Volume: 10 mb image" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Volume: 10 mb image">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">6060</stringProp>
           <stringProp name="HTTPSampler.path">/api/v1/product/create-product</stringProp>
@@ -560,9 +560,9 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
             <collectionProp name="HTTPFileArgs.files">
-              <elementProp name="C:\Users\emoGu\OneDrive\Pictures\med-10-mb-jpg.jpg" elementType="HTTPFileArg">
+              <elementProp name="../assets/med-10-mb-jpg.jpg" elementType="HTTPFileArg">
                 <stringProp name="File.mimetype">image/jpeg</stringProp>
-                <stringProp name="File.path">C:\Users\emoGu\OneDrive\Pictures\med-10-mb-jpg.jpg</stringProp>
+                <stringProp name="File.path">../assets/med-10-mb-jpg.jpg</stringProp>
                 <stringProp name="File.paramname">photo</stringProp>
               </elementProp>
             </collectionProp>
@@ -630,7 +630,7 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Volume: 30 mb image" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Volume: 30 mb image">
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">6060</stringProp>
           <stringProp name="HTTPSampler.path">/api/v1/product/create-product</stringProp>
@@ -639,9 +639,9 @@ Stress Test	200	150 seconds	1	Stress test to identify system bottlenecks under l
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
             <collectionProp name="HTTPFileArgs.files">
-              <elementProp name="C:\Users\emoGu\OneDrive\Pictures\large-30-mb-jpg.jpg" elementType="HTTPFileArg">
+              <elementProp name="../assets/large-30-mb-jpg.jpg" elementType="HTTPFileArg">
                 <stringProp name="File.mimetype">image/jpeg</stringProp>
-                <stringProp name="File.path">C:\Users\emoGu\OneDrive\Pictures\large-30-mb-jpg.jpg</stringProp>
+                <stringProp name="File.path">../assets/large-30-mb-jpg.jpg</stringProp>
                 <stringProp name="File.paramname">photo</stringProp>
               </elementProp>
             </collectionProp>
